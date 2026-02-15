@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - LIFT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --turquoise: #2EC4B6;
+            --dark-turquoise: #1A9B8E;
+            --black: #0D0D0D;
+            --white: #FFFFFF;
+            --gray: #1F1F1F;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--black);
+            overflow-x: hidden;
+            color: var(--white);
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 50%, #0D0D0D 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(46, 196, 182, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(46, 196, 182, 0.1) 0%, transparent 50%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(46, 196, 182, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(46, 196, 182, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(46, 196, 182, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-img {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white);
+            letter-spacing: 2px;
+        }
+
+        .logo-text span {
+            font-size: 0.65rem;
+            color: var(--turquoise);
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: color 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu li a.active {
+            color: var(--turquoise);
+        }
+
+        .nav-menu li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--turquoise);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu li a:hover::after,
+        .nav-menu li a.active::after {
+            width: 100%;
+        }
+
+        .btn-join {
+            padding: 0.8rem 2rem;
+            background: var(--turquoise);
+            color: var(--black);
+            border: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(46, 196, 182, 0.4);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 30px;
+            height: 3px;
+            background: var(--turquoise);
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        /* Hero Header */
+        .hero-header {
+            position: relative;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            margin-top: 80px;
+            overflow: hidden;
+        }
+
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.1), transparent);
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .hero-title .lift-text {
+            color: var(--turquoise);
+            display: inline-block;
+            animation: glow 2s ease-in-out infinite;
+            text-shadow: 
+                0 0 20px rgba(46, 196, 182, 0.8),
+                0 0 40px rgba(46, 196, 182, 0.5),
+                0 0 60px rgba(46, 196, 182, 0.3);
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 20px rgba(46, 196, 182, 0.8),
+                    0 0 40px rgba(46, 196, 182, 0.5);
+            }
+            50% {
+                text-shadow: 
+                    0 0 30px rgba(46, 196, 182, 1),
+                    0 0 60px rgba(46, 196, 182, 0.8),
+                    0 0 90px rgba(46, 196, 182, 0.5);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--turquoise), var(--dark-turquoise));
+            color: var(--black);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            box-shadow: 0 10px 40px rgba(46, 196, 182, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 2rem;
+        }
+
+        /* Story Section */
+        .story-section {
+            margin-bottom: 120px;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .story-text h2 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 900;
+            margin-bottom: 2rem;
+            color: var(--white);
+        }
+
+        .story-text h2 .highlight {
+            color: var(--turquoise);
+            text-shadow: 0 0 20px rgba(46, 196, 182, 0.5);
+        }
+
+        .story-text p {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 1.5rem;
+        }
+
+        .story-image-container {
+            position: relative;
+            height: 600px;
+        }
+
+        .story-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.2), rgba(46, 196, 182, 0.05));
+            border: 3px solid var(--turquoise);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-image::before {
+            content: 'LIFT';
+            font-size: 10rem;
+            font-weight: 900;
+            color: rgba(46, 196, 182, 0.15);
+            animation: rotate 20s linear infinite;
+        }
+
+        .floating-badge {
+            position: absolute;
+            background: var(--turquoise);
+            color: var(--black);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 15px 40px rgba(46, 196, 182, 0.4);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .badge-1 {
+            top: 10%;
+            right: -50px;
+            animation-delay: 0s;
+        }
+
+        .badge-2 {
+            bottom: 10%;
+            left: -50px;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Values Grid */
+        .values-section {
+            margin-bottom: 120px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .section-header h2 .highlight {
+            color: var(--turquoise);
+            text-shadow: 0 0 30px rgba(46, 196, 182, 0.6);
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+        }
+
+        .value-card {
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.08), rgba(46, 196, 182, 0.02));
+            border: 2px solid rgba(46, 196, 182, 0.3);
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(46, 196, 182, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .value-card:hover::before {
+            left: 100%;
+        }
+
+        .value-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--turquoise);
+            box-shadow: 0 25px 60px rgba(46, 196, 182, 0.4);
+        }
+
+        .value-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 25px rgba(46, 196, 182, 0.8));
+            animation: bounce-icon 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce-icon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .value-card h3 {
+            font-size: 2rem;
+            color: var(--turquoise);
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .value-card p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            margin-bottom: 120px;
+            background: rgba(31, 31, 31, 0.4);
+            border: 2px solid rgba(46, 196, 182, 0.2);
+            border-radius: 30px;
+            padding: 5rem 4rem;
+        }
+
+        .timeline-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--turquoise), rgba(46, 196, 182, 0.3));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: rgba(46, 196, 182, 0.08);
+            border: 2px solid rgba(46, 196, 182, 0.3);
+            border-radius: 15px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .timeline-content:hover {
+            background: rgba(46, 196, 182, 0.12);
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(46, 196, 182, 0.3);
+        }
+
+        .timeline-year {
+            display: inline-block;
+            background: var(--turquoise);
+            color: var(--black);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.8rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .timeline-content p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 30px;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--turquoise);
+            border: 6px solid var(--black);
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 0 0 30px rgba(46, 196, 182, 1);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(46, 196, 182, 1);
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(46, 196, 182, 1), 0 0 80px rgba(46, 196, 182, 0.5);
+            }
+        }
+
+        /* Team Section */
+        .team-section {
+            margin-bottom: 120px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 5rem;
+        }
+
+        .team-card {
+            background: rgba(31, 31, 31, 0.6);
+            border: 2px solid rgba(46, 196, 182, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(46, 196, 182, 0.15), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .team-card:hover::before {
+            opacity: 1;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--turquoise);
+            box-shadow: 0 20px 60px rgba(46, 196, 182, 0.3);
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--turquoise), var(--dark-turquoise));
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(46, 196, 182, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .team-card h3 {
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .team-role {
+            color: var(--turquoise);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .team-bio {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.15), rgba(46, 196, 182, 0.05));
+            border: 3px solid var(--turquoise);
+            border-radius: 30px;
+            padding: 5rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 100px;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(46, 196, 182, 0.2), transparent 70%);
+            animation: pulse 10s ease-in-out infinite;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-content h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-content .highlight {
+            color: var(--turquoise);
+            text-shadow: 0 0 30px rgba(46, 196, 182, 0.8);
+        }
+
+        .cta-content p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            padding: 1.5rem 4rem;
+            background: var(--turquoise);
+            color: var(--black);
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 40px rgba(46, 196, 182, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 25px 60px rgba(46, 196, 182, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .story-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .story-image-container {
+                height: 500px;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-line {
+                left: 30px;
+            }
+
+            .timeline-item {
+                flex-direction: row !important;
+                padding-left: 80px;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .timeline-dot {
+                left: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: rgba(13, 13, 13, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                transition: right 0.4s ease;
+                padding: 2rem;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .menu-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(9px, 9px);
+            }
+
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(9px, -9px);
+            }
+
+            .hero-header {
+                height: 50vh;
+            }
+
+            .main-content {
+                padding: 80px 1.5rem;
+            }
+
+            .story-section,
+            .values-section,
+            .timeline-section,
+            .team-section {
+                margin-bottom: 80px;
+            }
+
+            .floating-badge {
+                display: none;
+            }
+
+            .timeline-section {
+                padding: 3rem 2rem;
+            }
+
+            .cta-section {
+                padding: 3rem 2rem;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation delays */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-animation"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="lift-main-page.html" class="logo">
+                <svg class="logo-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 80 L35 20 L45 60 L55 40 L65 50 L80 80 Z" fill="#2EC4B6" stroke="#2EC4B6" stroke-width="3"/>
+                    <path d="M20 85 L80 85" stroke="#2EC4B6" stroke-width="6" stroke-linecap="round"/>
+                </svg>
+                <div class="logo-text">
+                    <h1>LIFT</h1>
+                    <span>L·F·T</span>
+                </div>
+            </a>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="lift-main-page.html">Inicio</a></li>
+                <li><a href="nosotros.html" class="active">Nosotros</a></li>
+                <li><a href="#valores">Valores</a></li>
+                <li><a href="#eventos">Eventos</a></li>
+                <li><a href="#ministerios">Ministerios</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+                <li><button class="btn-join">Únete</button></li>
+            </ul>
+
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <section class="hero-header">
+        <div class="hero-content animate-in">
+            <h1 class="hero-title">Conoce <span class="lift-text">LIFT</span></h1>
+            <p class="hero-subtitle">
+                Una comunidad donde el amor, el compañerismo y la verdad 
+                se unen para transformar vidas y formar líderes para Cristo
+            </p>
+            <div class="hero-badge">5 años impactando vidas</div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Story Section -->
+        <section class="story-section">
+            <div class="story-grid">
+                <div class="story-text">
+                    <h2>Nuestra <span class="highlight">Historia</span></h2>
+                    <p>
+                        Todo comenzó en 2021 con un grupo de 20 jóvenes que compartían un sueño: 
+                        crear una comunidad donde cada persona pudiera experimentar el amor transformador 
+                        de Cristo de manera auténtica y real.
+                    </p>
+                    <p>
+                        LIFT nació de la convicción de que los jóvenes necesitan más que solo reuniones; 
+                        necesitan una familia espiritual donde puedan ser ellos mismos, crecer en su fe, 
+                        y descubrir su propósito único en Dios.
+                    </p>
+                    <p>
+                        Hoy, cinco años después, somos una comunidad de más de 150 jóvenes activos, 
+                        con 10 ministerios diferentes, y hemos impactado cientos de vidas a través de 
+                        retiros, conferencias, eventos de adoración y servicio comunitario.
+                    </p>
+                </div>
+
+                <div class="story-image-container">
+                    <div class="story-image"></div>
+                    <div class="floating-badge badge-1">150+ Jóvenes</div>
+                    <div class="floating-badge badge-2">10 Ministerios</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="values-section">
+            <div class="section-header">
+                <h2>Nuestros <span class="highlight">Valores</span></h2>
+                <p>Los pilares que sostienen todo lo que hacemos en LIFT</p>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">❤️</div>
+                    <h3>LOVE</h3>
+                    <p>
+                        El amor de Dios es nuestra motivación y fundamento. Amamos incondicionalmente, 
+                        aceptamos genuinamente, y creamos un espacio seguro donde cada persona 
+                        puede ser auténtica y vulnerable.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">🤝</div>
+                    <h3>FELLOWSHIP</h3>
+                    <p>
+                        Creemos en el poder de la comunidad. Juntos somos más fuertes, nos apoyamos 
+                        mutuamente, celebramos victorias, y caminamos juntos en los momentos difíciles 
+                        de la vida.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">✨</div>
+                    <h3>TRUTH</h3>
+                    <p>
+                        La Palabra de Dios es nuestra guía absoluta. Vivimos con integridad, 
+                        buscamos la verdad en todo, y nos comprometemos a crecer en conocimiento 
+                        y aplicación de las Escrituras.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section class="timeline-section">
+            <div class="section-header">
+                <h2>Nuestro <span class="highlight">Recorrido</span></h2>
+                <p>5 años de historia, crecimiento y transformación</p>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-year">2021</span>
+                        <h3>Nace LIFT</h3>
+                        <p>
+                            Un grupo de 20 jóvenes apasionados se reúne con la visión de crear 
+                            una comunidad diferente, centrada en el amor genuino y la verdad bíblica.
+                        </p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-year">2022</span>
+                        <h3>Primer Gran Retiro</h3>
+                        <p>
+                            50 jóvenes experimentan un fin de semana transformador en las montañas. 
+                            Muchos encuentran a Cristo por primera vez, otros renuevan su compromiso.
+                        </p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-year">2023</span>
+                        <h3>Expansión y Crecimiento</h3>
+                        <p>
+                            Lanzamos 10 ministerios diferentes: alabanza, medios, intercesión, 
+                            enseñanza, servicio social, y más. Alcanzamos los 100+ miembros activos.
+                        </p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-year">2024</span>
+                        <h3>Impacto Regional</h3>
+                        <p>
+                            Organizamos conferencias regionales, colaboramos con otras iglesias, 
+                            y comenzamos programas de discipulado más profundos.
+                        </p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-year">2026</span>
+                        <h3>Nueva Era</h3>
+                        <p>
+                            150+ jóvenes activos, eventos semanales impactantes, y una visión 
+                            renovada de transformar nuestra ciudad con el evangelio de Cristo.
+                        </p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="team-section">
+            <div class="section-header">
+                <h2>Nuestro <span class="highlight">Equipo</span></h2>
+                <p>Líderes apasionados sirviendo con excelencia</p>
+            </div>
+
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">👨‍💼</div>
+                    <h3>Pastor Principal</h3>
+                    <div class="team-role">Líder General</div>
+                    <p class="team-bio">
+                        Guiando la visión y dirección espiritual de LIFT con pasión 
+                        por ver a los jóvenes alcanzar su potencial en Cristo.
+                    </p>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">👩‍💼</div>
+                    <h3>Directora de Alabanza</h3>
+                    <div class="team-role">Ministerio de Música</div>
+                    <p class="team-bio">
+                        Liderando experiencias poderosas de adoración que conectan 
+                        corazones con la presencia de Dios.
+                    </p>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">👨‍🎓</div>
+                    <h3>Director de Enseñanza</h3>
+                    <div class="team-role">Formación Bíblica</div>
+                    <p class="team-bio">
+                        Desarrollando programas de discipulado que fortalecen 
+                        la fe y el conocimiento bíblico de cada joven.
+                    </p>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">👩‍💻</div>
+                    <h3>Coordinadora de Medios</h3>
+                    <div class="team-role">Comunicación</div>
+                    <p class="team-bio">
+                        Creando contenido inspirador y manejando nuestra presencia 
+                        digital para alcanzar más jóvenes.
+                    </p>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">👨‍🏫</div>
+                    <h3>Líder de Grupos Pequeños</h3>
+                    <div class="team-role">Comunidad</div>
+                    <p class="team-bio">
+                        Facilitando conexiones profundas y relaciones auténticas 
+                        a través de grupos de comunidad íntima.
+                    </p>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">👩‍🤝‍👨</div>
+                    <h3>Coordinador de Eventos</h3>
+                    <div class="team-role">Logística</div>
+                    <p class="team-bio">
+                        Planificando y ejecutando eventos memorables que impactan 
+                        vidas y crean experiencias transformadoras.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>¿Listo para <span class="highlight">Unirte</span>?</h2>
+                <p>
+                    No importa dónde estés en tu camino de fe. En LIFT hay un lugar para ti. 
+                    Únete a una comunidad que te aceptará, te desafiará y te ayudará a crecer.
+                </p>
+                <button class="cta-button">Únete a LIFT Hoy</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu on link click
+        document.querySelectorAll('.nav-menu a, .nav-menu button').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and sections
+        document.querySelectorAll('.value-card, .timeline-item, .team-card, .story-grid').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(el);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
