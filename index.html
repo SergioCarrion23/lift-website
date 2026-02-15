@@ -27,6 +27,7 @@
             font-family: 'Outfit', sans-serif;
             background: var(--black);
             overflow-x: hidden;
+            color: var(--white);
         }
 
         /* Animated gradient background */
@@ -250,6 +251,7 @@
             justify-content: center;
             padding: 0 2rem;
             z-index: 2;
+            margin-bottom: 150px;
         }
 
         .hero-content {
@@ -258,9 +260,10 @@
             margin-top: 100px;
         }
 
-        /* Glitch effect text */
-        .glitch-wrapper {
-            position: relative;
+        /* 3D LIFT Effect - Super Enhanced */
+        .lift-3d-container {
+            perspective: 1000px;
+            margin-bottom: 2rem;
             display: inline-block;
         }
 
@@ -278,17 +281,83 @@
         .hero-title .lift {
             color: var(--turquoise);
             display: block;
-            animation: glowPulse 2s ease-in-out infinite;
+            font-size: clamp(4rem, 12vw, 10rem);
+            position: relative;
+            animation: lift3d 4s ease-in-out infinite;
+            text-shadow: 
+                0 0 20px rgba(46, 196, 182, 1),
+                0 0 40px rgba(46, 196, 182, 0.8),
+                0 0 60px rgba(46, 196, 182, 0.6),
+                0 0 80px rgba(46, 196, 182, 0.4),
+                5px 5px 0px rgba(46, 196, 182, 0.3),
+                10px 10px 0px rgba(46, 196, 182, 0.2),
+                15px 15px 0px rgba(46, 196, 182, 0.1),
+                20px 20px 30px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
         }
 
-        @keyframes glowPulse {
+        .hero-title .lift::before {
+            content: 'LIFT';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: rgba(46, 196, 182, 0.3);
+            z-index: -1;
+            transform: translateZ(-50px) scale(1.1);
+            filter: blur(20px);
+        }
+
+        .hero-title .lift::after {
+            content: 'LIFT';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: rgba(46, 196, 182, 0.1);
+            z-index: -2;
+            transform: translateZ(-100px) scale(1.2);
+            filter: blur(40px);
+        }
+
+        @keyframes lift3d {
             0%, 100% {
-                text-shadow: 0 0 20px rgba(46, 196, 182, 0.5),
-                             0 0 40px rgba(46, 196, 182, 0.3);
+                transform: rotateY(0deg) translateZ(0);
+                text-shadow: 
+                    0 0 20px rgba(46, 196, 182, 1),
+                    0 0 40px rgba(46, 196, 182, 0.8),
+                    0 0 60px rgba(46, 196, 182, 0.6),
+                    5px 5px 0px rgba(46, 196, 182, 0.3),
+                    10px 10px 0px rgba(46, 196, 182, 0.2),
+                    15px 15px 0px rgba(46, 196, 182, 0.1);
+            }
+            25% {
+                transform: rotateY(-5deg) translateZ(20px);
+                text-shadow: 
+                    0 0 30px rgba(46, 196, 182, 1),
+                    0 0 60px rgba(46, 196, 182, 0.9),
+                    0 0 90px rgba(46, 196, 182, 0.7),
+                    8px 8px 0px rgba(46, 196, 182, 0.4),
+                    16px 16px 0px rgba(46, 196, 182, 0.3),
+                    24px 24px 0px rgba(46, 196, 182, 0.2);
             }
             50% {
-                text-shadow: 0 0 30px rgba(46, 196, 182, 0.8),
-                             0 0 60px rgba(46, 196, 182, 0.5);
+                transform: rotateY(0deg) translateZ(40px) scale(1.05);
+                text-shadow: 
+                    0 0 40px rgba(46, 196, 182, 1),
+                    0 0 80px rgba(46, 196, 182, 1),
+                    0 0 120px rgba(46, 196, 182, 0.8),
+                    10px 10px 0px rgba(46, 196, 182, 0.5),
+                    20px 20px 0px rgba(46, 196, 182, 0.4),
+                    30px 30px 0px rgba(46, 196, 182, 0.3);
+            }
+            75% {
+                transform: rotateY(5deg) translateZ(20px);
+                text-shadow: 
+                    0 0 30px rgba(46, 196, 182, 1),
+                    0 0 60px rgba(46, 196, 182, 0.9),
+                    0 0 90px rgba(46, 196, 182, 0.7),
+                    8px 8px 0px rgba(46, 196, 182, 0.4),
+                    16px 16px 0px rgba(46, 196, 182, 0.3),
+                    24px 24px 0px rgba(46, 196, 182, 0.2);
             }
         }
 
@@ -316,6 +385,7 @@
             gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: 100px;
         }
 
         .btn-primary,
@@ -370,7 +440,447 @@
             transform: translateY(-5px);
         }
 
-        /* 3D Floating shapes */
+        /* Stats section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 5rem;
+            padding: 3rem 2rem;
+            background: rgba(46, 196, 182, 0.05);
+            border: 1px solid rgba(46, 196, 182, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--turquoise);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0.5rem;
+        }
+
+        /* Section Styling */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: 150px 2rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        .section-title .highlight {
+            color: var(--turquoise);
+            position: relative;
+            display: inline-block;
+            text-shadow: 
+                0 0 20px rgba(46, 196, 182, 0.6),
+                0 0 40px rgba(46, 196, 182, 0.4);
+        }
+
+        /* About Section */
+        .about {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+            margin-top: 5rem;
+        }
+
+        .about-text h3 {
+            font-size: 2rem;
+            color: var(--turquoise);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-image {
+            position: relative;
+            height: 500px;
+            border: 3px solid var(--turquoise);
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.1), rgba(46, 196, 182, 0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .about-image::before {
+            content: 'LIFT';
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(46, 196, 182, 0.1);
+            position: absolute;
+            animation: rotate 20s linear infinite;
+        }
+
+        /* Values Section */
+        .values {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 5rem;
+        }
+
+        .value-card {
+            background: rgba(46, 196, 182, 0.05);
+            border: 2px solid rgba(46, 196, 182, 0.2);
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(46, 196, 182, 0.1), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .value-card:hover::before {
+            opacity: 1;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--turquoise);
+            box-shadow: 0 20px 60px rgba(46, 196, 182, 0.3);
+        }
+
+        .value-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .value-card h3 {
+            font-size: 1.8rem;
+            color: var(--turquoise);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .value-card p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Events Section */
+        .events {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 5rem;
+        }
+
+        .event-card {
+            background: rgba(31, 31, 31, 0.8);
+            border: 1px solid rgba(46, 196, 182, 0.2);
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(46, 196, 182, 0.3);
+            border-color: var(--turquoise);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.3), rgba(46, 196, 182, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--turquoise);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-image::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(46, 196, 182, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .event-content {
+            padding: 2rem;
+        }
+
+        .event-date {
+            color: var(--turquoise);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .event-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .event-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .event-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: transparent;
+            border: 2px solid var(--turquoise);
+            color: var(--turquoise);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .event-btn:hover {
+            background: var(--turquoise);
+            color: var(--black);
+        }
+
+        /* Ministries Section */
+        .ministries {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .ministries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 5rem;
+        }
+
+        .ministry-card {
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.1), rgba(46, 196, 182, 0.05));
+            border: 2px solid rgba(46, 196, 182, 0.2);
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .ministry-card:hover {
+            background: rgba(46, 196, 182, 0.15);
+            border-color: var(--turquoise);
+            transform: scale(1.05);
+        }
+
+        .ministry-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .ministry-card h3 {
+            font-size: 1.3rem;
+            color: var(--turquoise);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.15), rgba(46, 196, 182, 0.05));
+            border: 3px solid var(--turquoise);
+            padding: 5rem 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(46, 196, 182, 0.2), transparent 70%);
+            animation: pulse 10s ease-in-out infinite;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 .lift-highlight {
+            color: var(--turquoise);
+            text-shadow: 
+                0 0 20px rgba(46, 196, 182, 0.8),
+                0 0 40px rgba(46, 196, 182, 0.5);
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button {
+            padding: 1.5rem 4rem;
+            background: var(--turquoise);
+            color: var(--black);
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(46, 196, 182, 0.6);
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 2;
+            background: rgba(13, 13, 13, 0.95);
+            border-top: 2px solid rgba(46, 196, 182, 0.2);
+            padding: 4rem 2rem 2rem;
+            margin-top: 150px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            color: var(--turquoise);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 2;
+            text-decoration: none;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--turquoise);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(46, 196, 182, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--turquoise);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--turquoise);
+            color: var(--black);
+            transform: translateY(-3px);
+        }
+
+        /* Floating shapes */
         .shape {
             position: absolute;
             pointer-events: none;
@@ -398,15 +908,6 @@
             filter: blur(50px);
         }
 
-        .shape-3 {
-            width: 200px;
-            height: 200px;
-            border: 2px solid rgba(46, 196, 182, 0.2);
-            top: 40%;
-            right: 10%;
-            animation: rotate3d 10s linear infinite;
-        }
-
         @keyframes float1 {
             0%, 100% { transform: translate(0, 0) scale(1); }
             50% { transform: translate(50px, -80px) scale(1.1); }
@@ -417,9 +918,9 @@
             50% { transform: translate(-30px, 50px) scale(0.9); }
         }
 
-        @keyframes rotate3d {
-            0% { transform: rotate(0deg) rotateY(0deg); }
-            100% { transform: rotate(360deg) rotateY(360deg); }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Scroll indicator */
@@ -454,39 +955,45 @@
             50% { transform: translateX(-50%) translateY(10px); }
         }
 
-        /* Stats section */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 5rem;
-            padding: 3rem 2rem;
-            background: rgba(46, 196, 182, 0.05);
-            border: 1px solid rgba(46, 196, 182, 0.1);
-            backdrop-filter: blur(10px);
+        /* Loading animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .stat-item {
-            text-align: center;
+        .hero-content > * {
+            animation: fadeInUp 0.8s ease-out backwards;
         }
 
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--turquoise);
-            font-family: 'Space Mono', monospace;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 0.5rem;
-        }
+        .hero-title { animation-delay: 0.2s; }
+        .hero-subtitle { animation-delay: 0.4s; }
+        .hero-description { animation-delay: 0.6s; }
+        .hero-cta { animation-delay: 0.8s; }
+        .stats { animation-delay: 1s; }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .about-image {
+                height: 400px;
+            }
+        }
+
         @media (max-width: 768px) {
+            section {
+                padding: 100px 1.5rem;
+            }
+
             .nav-menu {
                 position: fixed;
                 top: 0;
@@ -532,38 +1039,36 @@
             }
 
             .stats {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
                 gap: 1.5rem;
             }
 
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ministries-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .cta-section {
+                padding: 3rem 2rem;
+            }
+
             .shape-1,
-            .shape-2,
-            .shape-3 {
+            .shape-2 {
                 display: none;
             }
         }
-
-        /* Loading animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero-content > * {
-            animation: fadeInUp 0.8s ease-out backwards;
-        }
-
-        .hero-title { animation-delay: 0.2s; }
-        .hero-subtitle { animation-delay: 0.4s; }
-        .hero-description { animation-delay: 0.6s; }
-        .hero-cta { animation-delay: 0.8s; }
-        .stats { animation-delay: 1s; }
     </style>
 </head>
 <body>
@@ -588,8 +1093,9 @@
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home">Inicio</a></li>
                 <li><a href="#about">Nosotros</a></li>
+                <li><a href="#values">Valores</a></li>
                 <li><a href="#events">Eventos</a></li>
-                <li><a href="#resources">Recursos</a></li>
+                <li><a href="#ministries">Ministerios</a></li>
                 <li><a href="#contact">Contacto</a></li>
                 <li><button class="btn-join">Únete</button></li>
             </ul>
@@ -603,17 +1109,18 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="home">
         <!-- Floating shapes -->
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
 
         <div class="hero-content">
-            <h1 class="hero-title">
-                <span class="lift">LIFT</span>
-                TU COMUNIDAD
-            </h1>
+            <div class="lift-3d-container">
+                <h1 class="hero-title">
+                    <span class="lift">LIFT</span>
+                    TU COMUNIDAD
+                </h1>
+            </div>
             <p class="hero-subtitle">LOVE · FELLOWSHIP · TRUTH</p>
             <p class="hero-description">
                 Somos una comunidad de jóvenes vibrantes unidos por la fe, el amor y la verdad. 
@@ -652,6 +1159,197 @@
         </div>
     </section>
 
+    <!-- About Section -->
+    <section class="about" id="about">
+        <h2 class="section-title">Conoce <span class="highlight">LIFT</span></h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>¿Quiénes Somos?</h3>
+                <p>
+                    LIFT es más que un grupo de jóvenes; somos una familia unida por el amor de Cristo. 
+                    Nuestro nombre representa nuestros valores fundamentales: Love (Amor), Fellowship (Compañerismo) 
+                    y Truth (Verdad).
+                </p>
+                <p>
+                    Desde hace 5 años, hemos estado creando un espacio donde los jóvenes pueden crecer espiritualmente, 
+                    desarrollar relaciones auténticas y descubrir su propósito en Dios. Cada encuentro es una oportunidad 
+                    para experimentar Su presencia y compartir juntos.
+                </p>
+                <p>
+                    Creemos que cada joven tiene un potencial increíble y estamos comprometidos a ayudarte a alcanzarlo 
+                    a través de eventos dinámicos, grupos de estudio bíblico, retiros espirituales y oportunidades de servicio.
+                </p>
+            </div>
+            <div class="about-image">
+                <div class="shape shape-1"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values" id="values">
+        <h2 class="section-title">Nuestros Valores en <span class="highlight">LIFT</span></h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">❤️</div>
+                <h3>LOVE</h3>
+                <p>
+                    El amor es el fundamento de todo lo que hacemos. Amamos a Dios sobre todas las cosas 
+                    y a nuestro prójimo como a nosotros mismos, creando un ambiente de aceptación y gracia.
+                </p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">🤝</div>
+                <h3>FELLOWSHIP</h3>
+                <p>
+                    Creemos en la importancia de la comunidad. Juntos somos más fuertes, y a través del 
+                    compañerismo genuino encontramos apoyo, aliento y amistad verdadera.
+                </p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">✨</div>
+                <h3>TRUTH</h3>
+                <p>
+                    La verdad de la Palabra de Dios guía nuestros pasos. Buscamos vivir en integridad, 
+                    estudiando y aplicando las enseñanzas bíblicas en nuestra vida diaria.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="events" id="events">
+        <h2 class="section-title">Próximos Eventos <span class="highlight">LIFT</span></h2>
+        <div class="events-grid">
+            <div class="event-card">
+                <div class="event-image">🎉</div>
+                <div class="event-content">
+                    <div class="event-date">15 Marzo 2026</div>
+                    <h3>Noche de Alabanza</h3>
+                    <p>
+                        Únete a nosotros para una noche especial de adoración y alabanza. 
+                        Experimenta la presencia de Dios en un ambiente de libertad y gozo.
+                    </p>
+                    <button class="event-btn">Más Info</button>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="event-image">⛰️</div>
+                <div class="event-content">
+                    <div class="event-date">28-30 Marzo 2026</div>
+                    <h3>Retiro Espiritual</h3>
+                    <p>
+                        Tres días de renovación espiritual en las montañas. Desconéctate del mundo 
+                        y conéctate con Dios de una manera profunda.
+                    </p>
+                    <button class="event-btn">Registrarse</button>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="event-image">📖</div>
+                <div class="event-content">
+                    <div class="event-date">Todos los Viernes</div>
+                    <h3>Estudio Bíblico</h3>
+                    <p>
+                        Estudios bíblicos interactivos donde profundizamos en la Palabra de Dios 
+                        y compartimos experiencias de vida real.
+                    </p>
+                    <button class="event-btn">Ver Horarios</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ministries Section -->
+    <section class="ministries" id="ministries">
+        <h2 class="section-title">Ministerios <span class="highlight">LIFT</span></h2>
+        <div class="ministries-grid">
+            <div class="ministry-card">
+                <div class="ministry-icon">🎵</div>
+                <h3>Alabanza</h3>
+            </div>
+            <div class="ministry-card">
+                <div class="ministry-icon">🎥</div>
+                <h3>Medios</h3>
+            </div>
+            <div class="ministry-card">
+                <div class="ministry-icon">🙏</div>
+                <h3>Intercesión</h3>
+            </div>
+            <div class="ministry-card">
+                <div class="ministry-icon">👥</div>
+                <h3>Grupos Pequeños</h3>
+            </div>
+            <div class="ministry-card">
+                <div class="ministry-icon">🎓</div>
+                <h3>Enseñanza</h3>
+            </div>
+            <div class="ministry-card">
+                <div class="ministry-icon">🤲</div>
+                <h3>Servicio Social</h3>
+            </div>
+            <div class="ministry-card">
+                <div class="ministry-icon">🎨</div>
+                <h3>Artes Creativas</h3>
+            </div>
+            <div class="ministry-card">
+                <div class="ministry-icon">💬</div>
+                <h3>Evangelismo</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>¿Listo para <span class="lift-highlight">ELEVARTE</span>?</h2>
+        <p>
+            Únete a LIFT hoy y comienza tu viaje de fe, crecimiento y comunidad. 
+            Juntos alcanzaremos nuevas alturas en Cristo.
+        </p>
+        <button class="cta-button">Únete a LIFT Ahora</button>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LIFT</h3>
+                <p>Love in Fellowship and Truth</p>
+                <p>Una comunidad de jóvenes apasionados por Dios.</p>
+                <div class="social-links">
+                    <a href="#">📘</a>
+                    <a href="#">📷</a>
+                    <a href="#">🎵</a>
+                    <a href="#">▶️</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <a href="#home">Inicio</a>
+                <a href="#about">Nosotros</a>
+                <a href="#events">Eventos</a>
+                <a href="#ministries">Ministerios</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p>📧 info@liftcommunity.com</p>
+                <p>📱 +593 99 123 4567</p>
+                <p>📍 Cuenca, Ecuador</p>
+            </div>
+            <div class="footer-section">
+                <h3>Horarios</h3>
+                <p>Viernes: 7:00 PM - Estudio Bíblico</p>
+                <p>Domingo: 6:00 PM - Reunión General</p>
+                <p>Miércoles: 8:00 PM - Oración</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 LIFT Community. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
     <script>
         // Mobile menu toggle
         const menuToggle = document.getElementById('menuToggle');
@@ -663,7 +1361,7 @@
         });
 
         // Close menu when clicking on links
-        document.querySelectorAll('.nav-menu a').forEach(link => {
+        document.querySelectorAll('.nav-menu a, .nav-menu button').forEach(link => {
             link.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
                 navMenu.classList.remove('active');
@@ -707,7 +1405,7 @@
             const mouseY = e.clientY / window.innerHeight - 0.5;
 
             shapes.forEach((shape, index) => {
-                const speed = (index + 1) * 30;
+                const speed = (index + 1) * 20;
                 const x = mouseX * speed;
                 const y = mouseY * speed;
                 shape.style.transform = `translate(${x}px, ${y}px)`;
@@ -729,12 +1427,31 @@
             }, 16);
         };
 
-        // Trigger counter animation when stats are in view
+        // Intersection Observer for animations
         const observerOptions = {
-            threshold: 0.5
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(section);
+        });
+
+        // Stats counter animation
+        const statsObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const numbers = document.querySelectorAll('.stat-number');
@@ -742,13 +1459,55 @@
                         const target = parseInt(num.textContent);
                         animateCounter(num, target);
                     });
-                    observer.unobserve(entry.target);
+                    statsObserver.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.5 });
 
         const statsSection = document.querySelector('.stats');
-        if (statsSection) observer.observe(statsSection);
+        if (statsSection) statsObserver.observe(statsSection);
+
+        // Add interactive hover effect to cards
+        document.querySelectorAll('.value-card, .event-card, .ministry-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Button click effects
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                let ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+                ripple.style.width = ripple.style.height = '100px';
+                ripple.style.left = e.clientX - this.offsetLeft - 50 + 'px';
+                ripple.style.top = e.clientY - this.offsetTop - 50 + 'px';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                0% {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
