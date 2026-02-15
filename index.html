@@ -480,45 +480,473 @@
         }
 
         .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5rem;
-            align-items: center;
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
             margin-top: 5rem;
         }
 
-        .about-text h3 {
-            font-size: 2rem;
-            color: var(--turquoise);
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-        }
-
-        .about-text p {
-            font-size: 1.1rem;
-            line-height: 2;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 1.5rem;
-        }
-
-        .about-image {
+        /* Main About Card */
+        .about-main-card {
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.08), rgba(46, 196, 182, 0.03));
+            border: 2px solid rgba(46, 196, 182, 0.3);
+            border-radius: 20px;
+            padding: 4rem;
             position: relative;
-            height: 500px;
-            border: 3px solid var(--turquoise);
-            background: linear-gradient(135deg, rgba(46, 196, 182, 0.1), rgba(46, 196, 182, 0.05));
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .about-main-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(46, 196, 182, 0.1), transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .about-card-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--turquoise), var(--dark-turquoise));
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 10px 30px rgba(46, 196, 182, 0.4);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .about-icon {
+            font-size: 2.5rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .about-card-header h3 {
+            font-size: 2.5rem;
+            color: var(--turquoise);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .about-main-card p {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-main-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .text-highlight {
+            color: var(--turquoise);
+            font-weight: 600;
+        }
+
+        /* About Cards Grid (Vision & Mission) */
+        .about-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .about-info-card {
+            background: rgba(31, 31, 31, 0.6);
+            border: 2px solid rgba(46, 196, 182, 0.2);
+            border-radius: 15px;
+            padding: 3rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .about-info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--turquoise), var(--dark-turquoise));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .about-info-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--turquoise);
+            box-shadow: 0 20px 60px rgba(46, 196, 182, 0.3);
+        }
+
+        .about-info-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px rgba(46, 196, 182, 0.6));
+        }
+
+        .about-info-card h4 {
+            font-size: 1.8rem;
+            color: var(--turquoise);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .about-info-card p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .card-glow {
+            position: absolute;
+            bottom: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(46, 196, 182, 0.2), transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .about-info-card:hover .card-glow {
+            opacity: 1;
+        }
+
+        /* About Gallery */
+        .about-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 250px);
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.15), rgba(46, 196, 182, 0.05));
+            border: 2px solid rgba(46, 196, 182, 0.3);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .gallery-large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .gallery-medium {
+            grid-column: span 2;
+        }
+
+        .gallery-small {
+            grid-column: span 1;
+        }
+
+        .gallery-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .gallery-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px rgba(46, 196, 182, 0.8));
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-content h4 {
+            font-size: 1.5rem;
+            color: var(--turquoise);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .gallery-content p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.3), rgba(46, 196, 182, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-item:hover .gallery-icon {
+            transform: scale(1.2) rotateZ(10deg);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(46, 196, 182, 0.4);
+            border-color: var(--turquoise);
+        }
+
+        /* Timeline */
+        .about-timeline {
+            background: rgba(31, 31, 31, 0.4);
+            border: 2px solid rgba(46, 196, 182, 0.2);
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            position: relative;
+        }
+
+        .timeline-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .timeline-header h3 {
+            font-size: 2.5rem;
+            color: var(--turquoise);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .timeline-items {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline-items::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--turquoise), transparent);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -3rem;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--turquoise);
+            border-radius: 50%;
+            border: 4px solid var(--black);
+            box-shadow: 0 0 20px rgba(46, 196, 182, 0.8);
+            z-index: 2;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(46, 196, 182, 0.8);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(46, 196, 182, 1);
+                transform: scale(1.2);
+            }
+        }
+
+        .timeline-content {
+            background: rgba(46, 196, 182, 0.05);
+            border: 1px solid rgba(46, 196, 182, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            background: rgba(46, 196, 182, 0.1);
+            border-color: var(--turquoise);
+            transform: translateX(10px);
+        }
+
+        .timeline-year {
+            display: inline-block;
+            background: var(--turquoise);
+            color: var(--black);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .timeline-content h4 {
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .timeline-content p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.7;
+        }
+
+        /* Values Banner */
+        .about-values-banner {
+            background: linear-gradient(135deg, rgba(46, 196, 182, 0.15), rgba(46, 196, 182, 0.05));
+            border: 3px solid var(--turquoise);
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            position: relative;
             overflow: hidden;
         }
 
-        .about-image::before {
-            content: 'LIFT';
-            font-size: 8rem;
-            font-weight: 900;
-            color: rgba(46, 196, 182, 0.1);
+        .values-banner-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .values-banner-content h3 {
+            font-size: 2.2rem;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .banner-highlight {
+            color: var(--turquoise);
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(46, 196, 182, 0.6);
+        }
+
+        .values-banner-content > p {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.9;
+            margin-bottom: 2.5rem;
+        }
+
+        .banner-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .banner-stat {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(46, 196, 182, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(46, 196, 182, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .banner-stat:hover {
+            background: rgba(46, 196, 182, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+        }
+
+        .stat-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .values-banner-decoration {
             position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .decoration-circle {
+            position: absolute;
+            border: 2px solid rgba(46, 196, 182, 0.3);
+            border-radius: 50%;
             animation: rotate 20s linear infinite;
+        }
+
+        .circle-1 {
+            width: 200px;
+            height: 200px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .circle-2 {
+            width: 150px;
+            height: 150px;
+            top: -75px;
+            right: -75px;
+            animation-direction: reverse;
+        }
+
+        .circle-3 {
+            width: 100px;
+            height: 100px;
+            top: -50px;
+            right: -50px;
         }
 
         /* Values Section */
@@ -956,13 +1384,24 @@
 
         /* Responsive */
         @media (max-width: 1024px) {
-            .about-content {
+            .about-cards-grid {
                 grid-template-columns: 1fr;
-                gap: 3rem;
             }
 
-            .about-image {
-                height: 400px;
+            .about-gallery {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: auto;
+            }
+
+            .gallery-large,
+            .gallery-medium,
+            .gallery-small {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+
+            .values-banner-decoration {
+                display: none;
             }
         }
 
@@ -1040,6 +1479,48 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .about-main-card {
+                padding: 2.5rem 2rem;
+            }
+
+            .about-card-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .about-card-header h3 {
+                font-size: 2rem;
+            }
+
+            .about-info-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .about-gallery {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+
+            .timeline-items {
+                padding-left: 2rem;
+            }
+
+            .timeline-dot {
+                left: -2.5rem;
+            }
+
+            .about-values-banner {
+                padding: 2.5rem 2rem;
+            }
+
+            .values-banner-content h3 {
+                font-size: 1.6rem;
+            }
+
+            .banner-stats {
+                grid-template-columns: 1fr;
+            }
+
             .footer-content {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -1077,7 +1558,7 @@
 
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home">Inicio</a></li>
-                <li><a href="#about">Nosotros</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
                 <li><a href="#values">Valores</a></li>
                 <li><a href="#events">Eventos</a></li>
                 <li><a href="#ministries">Ministerios</a></li>
@@ -1147,26 +1628,180 @@
     <!-- About Section -->
     <section class="about" id="about">
         <h2 class="section-title">Conoce <span class="highlight">LIFT</span></h2>
+        
         <div class="about-content">
-            <div class="about-text">
-                <h3>¿Quiénes Somos?</h3>
+            <!-- Main About Card -->
+            <div class="about-main-card">
+                <div class="about-card-header">
+                    <div class="about-icon-wrapper">
+                        <div class="about-icon">🚀</div>
+                    </div>
+                    <h3>¿Quiénes Somos?</h3>
+                </div>
                 <p>
-                    LIFT es más que un grupo de jóvenes; somos una familia unida por el amor de Cristo. 
-                    Nuestro nombre representa nuestros valores fundamentales: Love (Amor), Fellowship (Compañerismo) 
-                    y Truth (Verdad).
+                    LIFT es más que un grupo de jóvenes; somos una <strong>familia unida por el amor de Cristo</strong>. 
+                    Nuestro nombre representa nuestros valores fundamentales: <span class="text-highlight">Love (Amor)</span>, 
+                    <span class="text-highlight">Fellowship (Compañerismo)</span> y <span class="text-highlight">Truth (Verdad)</span>.
                 </p>
                 <p>
                     Desde hace 5 años, hemos estado creando un espacio donde los jóvenes pueden crecer espiritualmente, 
                     desarrollar relaciones auténticas y descubrir su propósito en Dios. Cada encuentro es una oportunidad 
                     para experimentar Su presencia y compartir juntos.
                 </p>
-                <p>
-                    Creemos que cada joven tiene un potencial increíble y estamos comprometidos a ayudarte a alcanzarlo 
-                    a través de eventos dinámicos, grupos de estudio bíblico, retiros espirituales y oportunidades de servicio.
-                </p>
             </div>
-            <div class="about-image">
-                <div class="shape shape-1"></div>
+
+            <!-- Vision & Mission Cards -->
+            <div class="about-cards-grid">
+                <div class="about-info-card vision-card">
+                    <div class="card-icon">👁️</div>
+                    <h4>Nuestra Visión</h4>
+                    <p>
+                        Ser una comunidad referente de jóvenes que impactan su generación con el amor de Cristo, 
+                        formando líderes espirituales que transformen su entorno.
+                    </p>
+                    <div class="card-glow"></div>
+                </div>
+
+                <div class="about-info-card mission-card">
+                    <div class="card-icon">🎯</div>
+                    <h4>Nuestra Misión</h4>
+                    <p>
+                        Formar jóvenes comprometidos con Dios a través de la adoración, el discipulado y el servicio, 
+                        creando un ambiente de amor y verdad.
+                    </p>
+                    <div class="card-glow"></div>
+                </div>
+            </div>
+
+            <!-- Image Gallery Grid -->
+            <div class="about-gallery">
+                <div class="gallery-item gallery-large">
+                    <div class="gallery-content">
+                        <div class="gallery-icon">🙌</div>
+                        <h4>Adoración</h4>
+                        <p>Experiencias poderosas de adoración y presencia de Dios</p>
+                    </div>
+                    <div class="gallery-overlay"></div>
+                </div>
+
+                <div class="gallery-item gallery-medium">
+                    <div class="gallery-content">
+                        <div class="gallery-icon">📖</div>
+                        <h4>Estudio</h4>
+                        <p>Profundizamos en la Palabra de Dios juntos</p>
+                    </div>
+                    <div class="gallery-overlay"></div>
+                </div>
+
+                <div class="gallery-item gallery-medium">
+                    <div class="gallery-content">
+                        <div class="gallery-icon">❤️</div>
+                        <h4>Comunidad</h4>
+                        <p>Relaciones auténticas y significativas</p>
+                    </div>
+                    <div class="gallery-overlay"></div>
+                </div>
+
+                <div class="gallery-item gallery-small">
+                    <div class="gallery-content">
+                        <div class="gallery-icon">🤝</div>
+                        <h4>Servicio</h4>
+                    </div>
+                    <div class="gallery-overlay"></div>
+                </div>
+
+                <div class="gallery-item gallery-small">
+                    <div class="gallery-content">
+                        <div class="gallery-icon">🌟</div>
+                        <h4>Crecimiento</h4>
+                    </div>
+                    <div class="gallery-overlay"></div>
+                </div>
+            </div>
+
+            <!-- Experience Timeline -->
+            <div class="about-timeline">
+                <div class="timeline-header">
+                    <h3>Nuestro Recorrido</h3>
+                    <p>5 años de historia, amor y transformación</p>
+                </div>
+                
+                <div class="timeline-items">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2021</div>
+                            <h4>Nace LIFT</h4>
+                            <p>Un grupo de 20 jóvenes con un sueño: crear una comunidad diferente</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2022</div>
+                            <h4>Primer Retiro</h4>
+                            <p>50 jóvenes experimentan un encuentro transformador con Dios</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2023</div>
+                            <h4>Expansión</h4>
+                            <p>Lanzamos 10 ministerios diferentes y alcanzamos 100+ jóvenes</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2024</div>
+                            <h4>Impacto Regional</h4>
+                            <p>Conferencias, eventos masivos y colaboraciones con otras comunidades</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2026</div>
+                            <h4>Nueva Era</h4>
+                            <p>150+ jóvenes activos, impactando la ciudad con el evangelio</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Values Highlight -->
+            <div class="about-values-banner">
+                <div class="values-banner-content">
+                    <h3>Creemos que cada joven tiene un <span class="banner-highlight">propósito único</span> en Cristo</h3>
+                    <p>
+                        Nuestro compromiso es ayudarte a descubrirlo, desarrollarlo y vivirlo plenamente. 
+                        Aquí encontrarás un espacio seguro para crecer, cuestionar, aprender y ser tú mismo.
+                    </p>
+                    <div class="banner-stats">
+                        <div class="banner-stat">
+                            <span class="stat-icon">🎓</span>
+                            <span class="stat-text">Discipulado Continuo</span>
+                        </div>
+                        <div class="banner-stat">
+                            <span class="stat-icon">💪</span>
+                            <span class="stat-text">Liderazgo Formado</span>
+                        </div>
+                        <div class="banner-stat">
+                            <span class="stat-icon">🔥</span>
+                            <span class="stat-text">Pasión por Dios</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="values-banner-decoration">
+                    <div class="decoration-circle circle-1"></div>
+                    <div class="decoration-circle circle-2"></div>
+                    <div class="decoration-circle circle-3"></div>
+                </div>
             </div>
         </div>
     </section>
