@@ -387,20 +387,20 @@ function resetSpark(i, fromPaper=false, px=0, py=0, pz=0){
     sPos[i*3]=px+(Math.random()-.5)*.2;
     sPos[i*3+1]=py+.05;
     sPos[i*3+2]=pz+(Math.random()-.5)*.2;
-    sVel[i*3]=(Math.random()-.5)*.06;
-    sVel[i*3+1]=.06+Math.random()*.12;
-    sVel[i*3+2]=(Math.random()-.5)*.06;
-    sLife[i]=.5+Math.random()*.5;
+    sVel[i*3]=(Math.random()-.5)*.03;
+    sVel[i*3+1]=.03+Math.random()*.06;
+    sVel[i*3+2]=(Math.random()-.5)*.03;
+    sLife[i]=.7+Math.random()*.6;
   } else {
     const a=Math.random()*Math.PI*2, r=Math.random()*.3;
     sPos[i*3]=Math.cos(a)*r;
     sPos[i*3+1]=.5+Math.random()*.2;
     sPos[i*3+2]=Math.sin(a)*r;
-    const sp=.025+Math.random()*.04, va=Math.random()*Math.PI*2;
+    const sp=.010+Math.random()*.018, va=Math.random()*Math.PI*2;
     sVel[i*3]=Math.cos(va)*sp*.4;
-    sVel[i*3+1]=.05+Math.random()*.09;
+    sVel[i*3+1]=.022+Math.random()*.038;
     sVel[i*3+2]=Math.sin(va)*sp*.4;
-    sLife[i]=.6+Math.random()*.5;
+    sLife[i]=.8+Math.random()*.7;
   }
   sMaxLife[i] = sLife[i];
   const tc=Math.random();
@@ -580,13 +580,21 @@ function updatePapers(dt){
         p.mesh.rotation.x = -Math.PI/2 + (Math.random()-.5)*.4;
         p.mesh.rotation.y = Math.random()*Math.PI*2;
         p.mesh.rotation.z = (Math.random()-.5)*.3;
-        setTimeout(()=>{
-          p.state='burning';
-          fireBoost = Math.min(2.5, fireBoost + 1.5); // STRONGER spike
-        },300);
+        // Immediately start burning with eased boost ramp
+        p.state='burning';
+        p.boostRamp = 0; // will ease from 0→1 over ~0.5s
       }
 
     } else if(p.state==='burning'){
+      // Ease-in the fire boost on first frames of burning
+      if(p.boostRamp !== undefined && p.boostRamp < 1.0){
+        p.boostRamp = Math.min(1.0, p.boostRamp + dt * 2.2); // ~0.45s to full
+        // Cubic ease-in-out
+        const eased = p.boostRamp < 0.5
+          ? 4*p.boostRamp*p.boostRamp*p.boostRamp
+          : 1 - Math.pow(-2*p.boostRamp+2,3)/2;
+        fireBoost = Math.min(2.5, fireBoost + eased * 0.08);
+      }
       // SLOWER burn: was 0.003, now 0.0014
       p.burnProgress += 0.0022 + Math.random()*0.0008;
       p.mat.uniforms.burnProgress.value = p.burnProgress;
@@ -605,10 +613,8 @@ function updatePapers(dt){
         p.geo.dispose(); p.mat.dispose();
         p.state='done';
         paperBurnedCount++;
-        // Show verse after first paper fully burns
-        if(paperBurnedCount===1){
-          setTimeout(showVerse, 400);
-        }
+        // Show verse after every paper burns
+        setTimeout(showVerse, 400);
       }
     }
   }
@@ -617,6 +623,9 @@ function updatePapers(dt){
 // ─── VERSE LOGIC ───────────────────────────────────────────────────────────
 function showVerse(){
   const overlay = document.getElementById('verse-overlay');
+  // Reset to allow re-animation
+  overlay.classList.remove('show');
+  void overlay.offsetWidth; // force reflow
   overlay.classList.add('show');
 }
 function closeVerse(){
