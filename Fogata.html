@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Fogata · Salmo 51:10</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -173,165 +174,177 @@
     position:fixed;inset:0;z-index:90;
     display:flex;align-items:center;justify-content:center;
     pointer-events:none;opacity:0;
-    transition:opacity 0.8s cubic-bezier(0.4,0,0.2,1);
-    background: radial-gradient(ellipse at 50% 60%, rgba(10,5,2,0.82) 0%, rgba(5,3,1,0.96) 100%);
+    transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1);
+    background: radial-gradient(ellipse at 50% 55%, rgba(8,4,2,0.75) 0%, rgba(4,2,1,0.94) 100%);
   }
   #paper-overlay.show { opacity:1; pointer-events:all; }
 
   .paper-card {
     position:relative;
-    width: min(520px, 90vw);
-    background: linear-gradient(160deg,
-      rgba(245,238,218,0.93) 0%,
-      rgba(238,228,200,0.90) 40%,
-      rgba(230,218,188,0.88) 100%);
-    border-radius:1px;
-    padding:48px 52px 40px;
+    width: min(400px, 82vw);
+    /* Proporción de hoja A4 aprox */
+    background:
+      /* Mancha de luz natural */
+      radial-gradient(ellipse at 30% 20%, rgba(255,252,230,0.6) 0%, transparent 60%),
+      /* Color base papel crema */
+      linear-gradient(175deg,
+        rgba(248,242,218,1) 0%,
+        rgba(242,234,205,1) 35%,
+        rgba(236,226,196,1) 70%,
+        rgba(230,220,190,1) 100%);
+    border-radius:0; /* sin radius — es papel */
+    padding:38px 40px 34px 52px; /* más margen izquierdo para la línea */
     box-shadow:
-      0 0 0 1px rgba(180,150,80,0.25),
-      0 8px 60px rgba(0,0,0,0.7),
-      0 2px 8px rgba(0,0,0,0.4),
-      inset 0 1px 0 rgba(255,255,220,0.6);
-    transform:translateY(24px) rotate(-0.4deg);
-    transition: transform 0.8s cubic-bezier(0.4,0,0.2,1), opacity 0.8s ease;
+      /* Sombra dura inferior derecha como papel sobre mesa */
+      4px 6px 0px rgba(0,0,0,0.18),
+      8px 12px 30px rgba(0,0,0,0.55),
+      0 0 80px rgba(255,120,30,0.08),
+      /* Borde sutil */
+      inset 0 0 0 0.5px rgba(180,160,110,0.4);
+    transform: translateY(20px) rotate(-1.2deg);
+    transition: transform 0.75s cubic-bezier(0.4,0,0.2,1), opacity 0.75s ease;
     opacity:0;
+    /* Doblez esquina superior derecha */
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
   }
   #paper-overlay.show .paper-card {
-    transform:translateY(0) rotate(-0.4deg);
+    transform: translateY(0) rotate(-1.2deg);
     opacity:1;
-    transition-delay:0.15s;
+    transition-delay:0.12s;
   }
 
-  /* Paper texture lines */
+  /* Doblez esquina — triángulo de sombra */
+  .paper-fold {
+    position:absolute;top:0;right:0;
+    width:18px;height:18px;
+    background: linear-gradient(225deg, rgba(180,155,100,0.55) 0%, rgba(200,175,120,0.2) 100%);
+    clip-path: polygon(0 0, 100% 100%, 100% 0);
+  }
+  .paper-fold::after {
+    content:'';position:absolute;
+    top:0;left:0;width:18px;height:18px;
+    background: linear-gradient(225deg, rgba(140,115,70,0.4) 0%, transparent 70%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
+
+  /* Líneas de papel */
   .paper-card::before {
-    content:'';position:absolute;inset:0;pointer-events:none;
+    content:'';position:absolute;
+    left:0;right:0;
+    top:82px;bottom:0;
+    pointer-events:none;
     background: repeating-linear-gradient(
-      transparent, transparent 27px,
-      rgba(160,140,100,0.12) 28px
+      transparent, transparent 26px,
+      rgba(140,120,80,0.13) 27px
     );
-    top:76px;border-radius:1px;
   }
 
-  /* Red margin line */
+  /* Línea roja de margen */
   .paper-card::after {
     content:'';position:absolute;
-    left:72px;top:0;bottom:0;width:1px;
-    background:rgba(200,80,80,0.25);
+    left:42px;top:0;bottom:0;width:1px;
+    background: linear-gradient(to bottom, transparent 8px, rgba(200,80,70,0.28) 8px, rgba(200,80,70,0.22) calc(100% - 8px), transparent calc(100% - 8px));
     pointer-events:none;
   }
 
   .paper-prompt {
-    font-family:'Cormorant Garamond',serif;
-    font-size:11px;font-weight:400;font-style:italic;
-    letter-spacing:3px;text-transform:uppercase;
-    color:rgba(100,70,30,0.55);
-    margin-bottom:22px;
-    padding-bottom:14px;
-    border-bottom:1px solid rgba(160,130,80,0.2);
-    line-height:1.6;
+    font-family:'Cinzel',serif;
+    font-size:8.5px;font-weight:400;
+    letter-spacing:4px;text-transform:uppercase;
+    color:rgba(100,72,32,0.45);
+    margin-bottom:16px;
+    padding-bottom:12px;
+    border-bottom:1px solid rgba(150,125,75,0.18);
   }
 
   .paper-question {
     font-family:'Cormorant Garamond',serif;
-    font-size:clamp(16px,2.2vw,21px);
-    font-weight:300;
-    color:rgba(60,38,14,0.82);
-    line-height:1.65;
-    margin-bottom:26px;
-    letter-spacing:0.2px;
+    font-size:clamp(15px,2vw,19px);
+    font-weight:400;
+    color:rgba(50,30,8,0.78);
+    line-height:1.7;
+    margin-bottom:20px;
+    letter-spacing:0.1px;
   }
-
   .paper-question em {
     font-style:italic;
-    color:rgba(60,38,14,0.65);
+    color:rgba(50,30,8,0.55);
   }
 
   #paper-text {
     width:100%;
-    min-height:130px;
-    max-height:220px;
+    min-height:120px;
+    max-height:200px;
     resize:none;
     background:transparent;
     border:none;outline:none;
     font-family:'Cormorant Garamond',serif;
-    font-size:clamp(15px,1.9vw,18px);
+    font-size:16px; /* CRÍTICO: <16px dispara zoom automático en iOS/Android */
     font-weight:400;
-    color:rgba(40,24,8,0.88);
-    line-height:28px; /* matches paper lines */
-    letter-spacing:0.15px;
-    caret-color:rgba(180,90,20,0.8);
+    color:rgba(35,18,4,0.85);
+    line-height:27px;
+    letter-spacing:0.1px;
+    caret-color:rgba(160,70,10,0.9);
     padding:0;
     overflow-y:auto;
+    -webkit-text-size-adjust:100%;
+    touch-action:manipulation;
   }
   #paper-text::placeholder {
-    color:rgba(140,110,70,0.35);
+    color:rgba(120,95,55,0.32);
     font-style:italic;
   }
-  #paper-text::-webkit-scrollbar { width:3px; }
-  #paper-text::-webkit-scrollbar-thumb { background:rgba(160,120,60,0.3); border-radius:2px; }
+  #paper-text::-webkit-scrollbar { width:2px; }
+  #paper-text::-webkit-scrollbar-thumb { background:rgba(150,115,60,0.25);border-radius:1px; }
 
   .paper-footer {
     display:flex;align-items:center;justify-content:space-between;
-    margin-top:28px;
-    padding-top:16px;
-    border-top:1px solid rgba(160,130,80,0.18);
+    margin-top:20px;
+    padding-top:12px;
+    border-top:1px solid rgba(150,125,75,0.15);
   }
 
   .paper-char-count {
-    font-family:'Cinzel',serif;font-size:9px;
-    letter-spacing:3px;color:rgba(140,100,50,0.4);
+    font-family:'Cinzel',serif;font-size:8px;
+    letter-spacing:2.5px;color:rgba(130,100,50,0.35);
   }
 
   #btn-throw {
-    position:relative;
     background:transparent;border:none;cursor:pointer;
     padding:0;font-family:'Cinzel',serif;
     transition:opacity 0.3s;
   }
-  #btn-throw:disabled { opacity:0.25;cursor:default;pointer-events:none; }
+  #btn-throw:disabled { opacity:0.2;cursor:default;pointer-events:none; }
 
   .throw-inner {
-    display:flex;align-items:center;gap:10px;
-    padding:12px 28px;
-    border:1px solid rgba(180,90,20,0.45);
-    color:rgba(140,70,10,0.85);
-    font-size:9px;letter-spacing:4.5px;text-transform:uppercase;
+    display:flex;align-items:center;gap:9px;
+    padding:10px 24px;
+    border:1px solid rgba(160,80,15,0.4);
+    color:rgba(120,60,8,0.85);
+    font-size:8.5px;letter-spacing:4px;text-transform:uppercase;
     font-family:'Cinzel',serif;font-weight:400;
-    background:rgba(255,220,160,0.12);
-    backdrop-filter:blur(4px);
-    clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
-    transition:all 0.35s ease;
+    background:rgba(255,200,120,0.10);
+    transition:all 0.3s ease;
   }
   #btn-throw:hover .throw-inner {
-    background:rgba(255,180,80,0.18);
-    border-color:rgba(200,110,30,0.7);
-    color:rgba(160,80,10,1);
-    box-shadow:0 0 20px rgba(200,100,20,0.15);
+    background:rgba(255,170,70,0.18);
+    border-color:rgba(180,90,20,0.65);
+    color:rgba(140,65,5,1);
+    box-shadow:0 0 16px rgba(200,90,10,0.12);
   }
   #btn-throw:active .throw-inner { transform:scale(0.97); }
 
-  .throw-icon { font-size:14px; transition:transform 0.4s ease; }
-  #btn-throw:hover .throw-icon { transform:translateX(3px) rotate(8deg); }
+  .throw-icon { font-size:13px;transition:transform 0.35s ease; }
+  #btn-throw:hover .throw-icon { transform:translateX(2px) rotate(10deg); }
 
-  /* Corner ornaments on paper card */
-  .paper-corner {
-    position:absolute;width:10px;height:10px;
-    border-color:rgba(160,120,60,0.35);border-style:solid;
-  }
-  .pc-tl { top:12px;left:12px;border-width:1px 0 0 1px; }
-  .pc-tr { top:12px;right:12px;border-width:1px 1px 0 0; }
-  .pc-bl { bottom:12px;left:12px;border-width:0 0 1px 1px; }
-  .pc-br { bottom:12px;right:12px;border-width:0 1px 1px 0; }
-
-  /* skip / close paper */
   #btn-skip-paper {
-    position:absolute;top:14px;right:18px;
+    position:absolute;top:10px;right:28px;
     background:transparent;border:none;cursor:pointer;
-    font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;
-    color:rgba(120,90,50,0.35);text-transform:uppercase;
+    font-family:'Cinzel',serif;font-size:7.5px;letter-spacing:3px;
+    color:rgba(110,85,45,0.3);text-transform:uppercase;
     transition:color 0.3s;padding:4px 0;
   }
-  #btn-skip-paper:hover { color:rgba(140,100,50,0.7); }
+  #btn-skip-paper:hover { color:rgba(130,95,45,0.65); }
 </style>
 </head>
 <body>
@@ -351,10 +364,7 @@
 <!-- WRITING PAPER OVERLAY -->
 <div id="paper-overlay">
   <div class="paper-card">
-    <div class="paper-corner pc-tl"></div>
-    <div class="paper-corner pc-tr"></div>
-    <div class="paper-corner pc-bl"></div>
-    <div class="paper-corner pc-br"></div>
+    <div class="paper-fold"></div>
     <button id="btn-skip-paper" onclick="closePaperOverlay()">× cerrar</button>
     <div class="paper-prompt">Reflexión personal</div>
     <div class="paper-question">
@@ -833,9 +843,25 @@ function openPaperOverlay(){
   setTimeout(()=>{ document.getElementById('paper-text').focus(); }, 400);
 }
 function closePaperOverlay(){
+  // 1. Blur el textarea primero — cierra el teclado móvil
+  const ta = document.getElementById('paper-text');
+  ta.blur();
+
+  // 2. Resetear zoom iOS/Android: scroll a 0,0 fuerza al browser a restablecer el viewport
+  setTimeout(()=>{
+    window.scrollTo(0, 0);
+    // Truco adicional para Safari: cambiar temporalmente el meta viewport
+    const mv = document.querySelector('meta[name=viewport]');
+    if(mv){
+      const orig = mv.content;
+      mv.content = orig + ', maximum-scale=1';
+      setTimeout(()=>{ mv.content = orig; }, 300);
+    }
+  }, 100);
+
   const overlay = document.getElementById('paper-overlay');
   overlay.classList.remove('show');
-  document.getElementById('paper-text').value='';
+  ta.value='';
   document.getElementById('char-count').textContent='0 / 400';
 }
 function throwPaper(){
