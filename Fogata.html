@@ -410,16 +410,21 @@ function resetSpark(i, fromPaper=false, px=0, py=0, pz=0){
 
 for(let i=0;i<SPARK_N;i++){
   resetSpark(i);
-  sPos[i*3+1]=Math.random()*3.5;
-  sMaxLife[i]=sLife[i];
+  sPos[i*3+1]=Math.random()*3.0; // scatter initial heights
+  sLife[i] = Math.random() * sMaxLife[i]; // randomize phase so not all die at once
 }
 
 const sparkGeo = new THREE.BufferGeometry();
-sparkGeo.setAttribute('position', new THREE.Float32BufferAttribute(sPos,3));
-sparkGeo.setAttribute('color',    new THREE.Float32BufferAttribute(sCol,3));
-sparkGeo.setAttribute('aSize',   new THREE.Float32BufferAttribute(sSiz,1));
-sparkGeo.setAttribute('aLife',   new THREE.Float32BufferAttribute(sLife,1));
-sparkGeo.setAttribute('aMaxLife',new THREE.Float32BufferAttribute(sMaxLife,1));
+const sparkPosAttr  = new THREE.BufferAttribute(sPos,3);
+const sparkColAttr  = new THREE.BufferAttribute(sCol,3);
+const sparkSizAttr  = new THREE.BufferAttribute(sSiz,1);
+const sparkLifAttr  = new THREE.BufferAttribute(sLife,1);
+const sparkMLifAttr = new THREE.BufferAttribute(sMaxLife,1);
+sparkGeo.setAttribute('position', sparkPosAttr);
+sparkGeo.setAttribute('color',    sparkColAttr);
+sparkGeo.setAttribute('aSize',    sparkSizAttr);
+sparkGeo.setAttribute('aLife',    sparkLifAttr);
+sparkGeo.setAttribute('aMaxLife', sparkMLifAttr);
 
 // Shader-based spark material — fades by life
 const sparkMat = new THREE.ShaderMaterial({
@@ -583,7 +588,7 @@ function updatePapers(dt){
 
     } else if(p.state==='burning'){
       // SLOWER burn: was 0.003, now 0.0014
-      p.burnProgress += 0.00085 + Math.random()*0.0004;
+      p.burnProgress += 0.0022 + Math.random()*0.0008;
       p.mat.uniforms.burnProgress.value = p.burnProgress;
       p.mesh.position.y += 0.0005;
       p.mesh.rotation.z += Math.sin(p.localTime*3)*.001;
@@ -602,7 +607,7 @@ function updatePapers(dt){
         paperBurnedCount++;
         // Show verse after first paper fully burns
         if(paperBurnedCount===1){
-          setTimeout(showVerse, 1200);
+          setTimeout(showVerse, 400);
         }
       }
     }
@@ -646,25 +651,22 @@ function animate(){
 
   // ── UPDATE SPARKS (rise + fade by life) ──
   for(let i=0;i<SPARK_N;i++){
-    sLife[i] -= .007+Math.random()*.004;
+    sLife[i] -= .009+Math.random()*.005;
     sPos[i*3]   += sVel[i*3]   + (Math.random()-.5)*.006;
     sPos[i*3+1] += sVel[i*3+1];
     sPos[i*3+2] += sVel[i*3+2] + (Math.random()-.5)*.006;
-    // Natural deceleration (air resistance)
-    sVel[i*3+1] *= 0.992;
+    sVel[i*3+1] *= 0.990; // decelerate upward
+    const lifeFrac = Math.max(0, sLife[i]/Math.max(0.001,sMaxLife[i]));
+    sCol[i*3]   = 1.0;
+    sCol[i*3+1] = Math.max(0, 0.5 * lifeFrac);
+    sCol[i*3+2] = 0.0;
     if(sLife[i]<=0 || sPos[i*3+1]>6.5) resetSpark(i);
   }
-  sparkGeo.attributes.position.needsUpdate=true;
-  sparkGeo.attributes.aLife.needsUpdate=true;
-  // Update color glow: hotter = more yellow as they rise
-  for(let i=0;i<SPARK_N;i++){
-    const lifeFrac = Math.max(0, sLife[i]/sMaxLife[i]);
-    // Start orange, shift to dim red as life fades
-    sCol[i*3]   = 1.0;
-    sCol[i*3+1] = Math.max(0, (.3 + .5*(1-lifeFrac)) * lifeFrac);
-    sCol[i*3+2] = 0.0;
-  }
-  sparkGeo.attributes.color.needsUpdate=true;
+  sparkPosAttr.needsUpdate=true;
+  sparkColAttr.needsUpdate=true;
+  sparkSizAttr.needsUpdate=true;
+  sparkLifAttr.needsUpdate=true;
+  sparkMLifAttr.needsUpdate=true;
 
   // ── GROUND EMBERS ──
   for(let i=0;i<EMBER_N;i++){
