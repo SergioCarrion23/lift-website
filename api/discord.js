@@ -1,6 +1,4 @@
-const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1481523450630897739/x9v9yCanaJ6v4dCZaqK1sWEl4PmeZAgC3Ik-8WO6wm_daqZ_panaOEGCPWec4bv-E5D6';
-
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -15,6 +13,8 @@ export default async function handler(req, res) {
   }
 
   const { name, email, message, page, timestamp } = body;
+
+  const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1481523450630897739/x9v9yCanaJ6v4dCZaqK1sWEl4PmeZAgC3Ik-8WO6wm_daqZ_panaOEGCPWec4bv-E5D6';
 
   const discordBody = {
     embeds: [
@@ -44,4 +44,4 @@ export default async function handler(req, res) {
     const errorText = await response.text();
     return res.status(500).json({ error: 'Discord webhook failed', details: errorText });
   }
-}
+};
