@@ -1,0 +1,57 @@
+/* Paleta del logo Lift: negro, teal/turquesa, blanco */
+:root {
+  /* Primario y acento */
+  --color-primary: #0a0a0a;
+  --color-accent: #00b4d8;
+  --color-accent-light: #00ced1;
+  --color-accent-dark: #0096a8;
+
+  /* Fondos y superficie */
+  --color-bg: #f8fafb;
+  --color-bg-elevated: #ffffff;
+  --color-surface: rgba(255, 255, 255, 0.85);
+
+  /* Texto */
+  --color-text: #0a0a0a;
+  --color-text-muted: #4a5568;
+  --color-text-inverse: #f8fafb;
+
+  /* Bordes y sombras */
+  --color-border: rgba(0, 180, 216, 0.25);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.1);
+
+  /* Tipografía */
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+  --font-size-hero: 3.5rem;
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+
+  /* Espaciado */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Transiciones */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.35s ease;
+}

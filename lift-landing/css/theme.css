@@ -1,0 +1,45 @@
+/* Tema oscuro: override variables cuando [data-theme="dark"] */
+[data-theme="dark"] {
+  --color-bg: #0f1419;
+  --color-bg-elevated: #1a2332;
+  --color-surface: rgba(26, 35, 50, 0.9);
+  --color-text: #e8eaed;
+  --color-text-muted: #9aa0a6;
+  --color-text-inverse: #0f1419;
+  --color-border: rgba(0, 180, 216, 0.35);
+  --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 48px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .hero-content h1 {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .verse-card-front {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+}
+
+[data-theme="dark"] .verse-card-back {
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .card {
+  background: var(--color-bg-elevated);
+}
+
+[data-theme="dark"] .card p {
+  color: var(--color-text-muted);
+}
+
+[data-theme="dark"] .verse-card {
+  background: var(--color-bg);
+}
+
+[data-theme="dark"] .contact-form input,
+[data-theme="dark"] .contact-form textarea {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
