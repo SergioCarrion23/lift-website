@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lift – Amor en Comunión y Verdad</title>
+  <meta name="description" content="Lift, grupo juvenil. Amor en comunión y verdad." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --c1: #00b4d8;
+      --c2: #00ced1;
+      --c3: #0096a8;
+      --c4: #0077b6;
+      --c5: #48cae4;
+      --bg: #0a0a0a;
+      --bg-secondary: #111111;
+      --text: #f8fafb;
+      --text-muted: rgba(255,255,255,0.5);
+      --border: rgba(255,255,255,0.08);
+      --card-bg: rgba(255,255,255,0.03);
+      --card-bg-hover: rgba(255,255,255,0.06);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafb;
+      --bg-secondary: #ffffff;
+      --text: #0a0a0a;
+      --text-muted: rgba(10,10,10,0.5);
+      --border: rgba(0,0,0,0.08);
+      --card-bg: rgba(0,0,0,0.03);
+      --card-bg-hover: rgba(0,180,216,0.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    body:not(:has(#bg-canvas)) {
+      cursor: auto;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="light"] body::before {
+      opacity: 0.025;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 2;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 48px;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    [data-theme="light"] nav {
+      background: rgba(248, 250, 251, 0.85);
+    }
+
+    .nav-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-center a {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-center a::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--c1);
+      transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateX(-50%);
+    }
+
+    .nav-center a:hover, .nav-center a.active {
+      color: var(--text);
+    }
+
+    .nav-center a:hover::after, .nav-center a.active::after {
+      width: 100%;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+    }
+
+    [data-theme="light"] .logo-dark {
+      display: none;
+    }
+
+    [data-theme="light"] .logo-light {
+      display: block;
+    }
+
+    [data-theme="dark"] .logo-dark {
+      display: block;
+    }
+
+    [data-theme="dark"] .logo-light {
+      display: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: var(--card-bg);
+      border-radius: 12px;
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 10px;
+    }
+
+    .mobile-menu-btn span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--text);
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu-btn.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .mobile-menu-btn.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mobile-menu-btn.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: var(--bg-secondary);
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      gap: 16px;
+      z-index: 99;
+    }
+
+    .mobile-nav.active {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+
+    .mobile-nav a:hover, .mobile-nav a.active {
+      color: var(--c1);
+    }
+
+    .theme-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .theme-toggle:hover {
+      background: var(--card-bg-hover);
+      border-color: var(--c1);
+    }
+
+    .theme-toggle .sun, .theme-toggle .moon {
+      position: absolute;
+      font-size: 18px;
+      transition: all 0.4s ease;
+    }
+
+    .theme-toggle .sun {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    .theme-toggle .moon {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.5);
+    }
+
+    [data-theme="dark"] .theme-toggle .sun {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    [data-theme="dark"] .theme-toggle .moon {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.5);
+    }
+
+    [data-theme="light"] .theme-toggle .sun {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+    }
+
+    [data-theme="light"] .theme-toggle .moon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    .nav-cta {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--c1);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-cta:hover { 
+      background: var(--c2); 
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 180, 216, 0.3);
+    }
+
+    [data-theme="light"] .nav-cta {
+      color: #ffffff;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 160px 24px 140px;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 10px 20px;
+      border-radius: 100px;
+      margin-bottom: 36px;
+      animation: fadeUp 1s ease 0.2s both;
+    }
+
+    .hero-eyebrow span { color: var(--c1); }
+
+    .hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(48px, 9vw, 120px);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 32px;
+      padding: 0 16px;
+      animation: fadeUp 1s ease 0.4s both;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--c1), var(--c2), var(--c4));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 1.6vw, 18px);
+      font-weight: 400;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 64px;
+      animation: fadeUp 1s ease 0.6s both;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 160px 24px 100px;
+      position: relative;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      animation: fadeUp 1s ease 0.8s both;
+    }
+
+    .btn-primary {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--bg);
+      background: var(--text);
+      padding: 16px 36px;
+      border-radius: 100px;
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 12px 40px rgba(255,255,255,0.15); 
+    }
+
+    .btn-secondary {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 16px 36px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover { 
+      border-color: var(--c1); 
+      color: var(--text);
+    }
+
+    .scroll-hint {
+      display: none;
+    }
+
+    .scroll-hint span {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--c1), transparent);
+      animation: scrollPulse 2s ease infinite;
+    }
+
+    .features {
+      padding: 100px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      text-align: center;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, var(--accent-color, rgba(0,180,216,0.15)) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .feature-card:hover { 
+      background: var(--card-bg-hover); 
+      transform: translateY(-4px);
+    }
+
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-card:nth-child(1) { --accent-color: rgba(0,180,216,0.2); border-radius: 24px 0 0 0; }
+    .feature-card:nth-child(2) { --accent-color: rgba(0,206,209,0.2); }
+    .feature-card:nth-child(3) { --accent-color: rgba(0,118,182,0.2); border-radius: 0 24px 0 0; }
+    .feature-card:nth-child(4) { --accent-color: rgba(72,202,228,0.2); border-radius: 0 0 0 24px; }
+    .feature-card:nth-child(5) { --accent-color: rgba(0,150,168,0.2); }
+    .feature-card:nth-child(6) { --accent-color: rgba(0,180,216,0.15); border-radius: 0 0 24px 0; }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      font-size: 22px;
+      background: rgba(0,180,216,0.15);
+    }
+
+    .feature-title {
+      font-family: 'Fraunces', serif;
+      font-size: 24px;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .marquee-section {
+      padding: 60px 0;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 48px;
+      animation: marquee 25s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-item {
+      font-family: 'Fraunces', serif;
+      font-size: 36px;
+      font-style: italic;
+      color: rgba(255,255,255,0.1);
+      flex-shrink: 0;
+      letter-spacing: -0.02em;
+    }
+
+    [data-theme="light"] .marquee-item {
+      color: rgba(0,0,0,0.08);
+    }
+
+    .marquee-dot { color: var(--c1); font-style: normal; }
+
+    .cta-section {
+      padding: 120px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(44px, 8vw, 96px);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      max-width: 800px;
+    }
+
+    .cta-title em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cta-sub {
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 40px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 60px 48px;
+      background: var(--bg-secondary);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+    }
+
+    .footer-brand .logo {
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 280px;
+    }
+
+    .footer-col h4 {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 12px;
+    }
+
+    .footer-col a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: var(--c1);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 40px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-social a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .footer-social a:hover {
+      border-color: var(--c1);
+      color: var(--c1);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 1024px) {
+      .footer-content {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 12px 20px;
+      }
+      
+      .nav-center {
+        display: none;
+      }
+      
+      .mobile-menu-btn {
+        display: flex;
+      }
+      
+      .logo {
+        order: 1;
+      }
+      
+      .nav-right {
+        order: 2;
+      }
+      
+      .hero { padding: 120px 20px 100px; }
+      .hero-title { font-size: clamp(36px, 8vw, 56px); }
+      .features { padding: 80px 20px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-card { border-radius: 0 !important; }
+      .cta-section { padding: 80px 20px; }
+      .hero-actions { flex-direction: column; width: 100%; max-width: 280px; }
+      .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+      
+      footer { padding: 40px 20px; }
+      .footer-content { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="wrapper">
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="images/Logo-Lift-Sin-Fondo-Positivo.png" alt="Lift" class="logo-dark" />
+      <img src="images/Logo-Lift-Sin-Fondo-Negativo.png" alt="Lift" class="logo-light" />
+    </a>
+    <ul class="nav-center">
+      <li><a href="index.html" class="active">Inicio</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="versos.html">Versículos</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menú">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+        <span class="sun">☀️</span>
+        <span class="moon">🌙</span>
+      </button>
+      <a href="contacto.html" class="nav-cta">Contáctanos</a>
+    </div>
+  </nav>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html">Inicio</a>
+    <a href="nosotros.html">Nosotros</a>
+    <a href="versos.html">Versículos</a>
+    <a href="contacto.html">Contacto</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-eyebrow">
+      ✦ <span>Amor</span> en Comunión y Verdad
+    </div>
+    <h1 class="hero-title">
+      Un espacio<br>para <em>crecer</em>
+    </h1>
+    <p class="hero-sub">
+      Somos un grupo juvenil que busca vivir la fe en comunidad. 
+      Un lugar donde encajas y puedes ser tú mismo.
+    </p>
+    <div class="hero-actions">
+      <a href="nosotros.html" class="btn-primary">Conócenos</a>
+      <a href="versos.html" class="btn-secondary">Ver versículos →</a>
+    </div>
+  </section>
+
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <span class="marquee-item">Comunidad</span>
+      <span class="marquee-item marquee-dot">✦</span>
+      <span class="marquee-item">Fe</span>
+      <span class="marquee-item marquee-dot">✦</span>
+      <span class="marquee-item">Verdad</span>
+      <span class="marquee-item marquee-dot">✦</span>
+      <span class="marquee-item">Amor</span>
+      <span class="marquee-item marquee-dot">✦</span>
+      <span class="marquee-item">Esperanza</span>
+      <span class="marquee-item marquee-dot">✦</span>
+      <span class="marquee-item">Comunidad</span>
+      <span class="marquee-item marquee-dot">✦</span>
+      <span class="marquee-item">Fe</span>
+      <span class="marquee-item marquee-dot">✦</span>
+      <span class="marquee-item">Verdad</span>
+      <span class="marquee-item marquee-dot">✦</span>
+      <span class="marquee-item">Amor</span>
+      <span class="marquee-item marquee-dot">✦</span>
+      <span class="marquee-item">Esperanza</span>
+      <span class="marquee-item marquee-dot">✦</span>
+    </div>
+  </div>
+
+  <section class="features">
+    <p class="section-label reveal">Lo que nos define</p>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">❤️</div>
+        <h3 class="feature-title">Comunidad</h3>
+        <p class="feature-desc">Un lugar donde encajas y puedes ser tú mismo. Juntos construimos lazos que duran.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.1s">
+        <div class="feature-icon">📖</div>
+        <h3 class="feature-title">Fe y Verdad</h3>
+        <p class="feature-desc">Exploramos la Palabra de Dios de una manera clara, relevante y vida.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.2s">
+        <div class="feature-icon">🎉</div>
+        <h3 class="feature-title">Diversión</h3>
+        <p class="feature-desc">Reuniones, actividades y momentos que no olvidarás. La alegría es parte de nosotros.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.1s">
+        <div class="feature-icon">🤝</div>
+        <h3 class="feature-title">Apoyo</h3>
+        <p class="feature-desc">Siempre hay alguien para escucharte. Creemos en el poder de los brazos que se extienden.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.2s">
+        <div class="feature-icon">🌟</div>
+        <h3 class="feature-title">Crecimiento</h3>
+        <p class="feature-desc">Espacios para crecer espiritual y personalmente. Cada día es una nueva oportunidad.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.3s">
+        <div class="feature-icon">✨</div>
+        <h3 class="feature-title">Transformación</h3>
+        <p class="feature-desc">Creemos en el cambio que Dios produce en nuestras vidas. Ven y verás.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2 class="cta-title reveal">
+      ¿Listo para<br><em>comenzar?</em>
+    </h2>
+    <p class="cta-sub reveal" style="transition-delay:0.15s">
+      Te esperamos con brazos abiertos. No importa dónde estés en tu camino de fe.
+    </p>
+    <a href="contacto.html" class="btn-primary reveal" style="transition-delay:0.3s">Escríbenos</a>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+      <img src="images/Logo-Lift-Sin-Fondo-Positivo.png" alt="Lift" class="logo-dark" />
+      <img src="images/Logo-Lift-Sin-Fondo-Negativo.png" alt="Lift" class="logo-light" />
+    </a>
+        <p>Un grupo juvenil comprometido con vivir la fe en comunidad, con amor y verdad.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="versos.html">Versículos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="mailto:info@lift.com">info@lift.com</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Facebook</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Horario</h4>
+        <ul>
+          <li><a href="#">Sábados 7:00 PM</a></li>
+          <li><a href="#">Domingos 10:00 AM</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Lift – Amor en comunión y verdad</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">📷</a>
+        <a href="#" aria-label="Facebook">📘</a>
+        <a href="#" aria-label="WhatsApp">💬</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+
+let W, H, t = 0;
+let mouse = { x: 0.5, y: 0.5 };
+let rawMouse = { x: 0.5, y: 0.5 };
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+window.addEventListener('mousemove', e => {
+  rawMouse.x = e.clientX / W;
+  rawMouse.y = e.clientY / H;
+});
+
+const orbs = [
+  { x:0.15, y:0.25, r:0.65, color:[0,180,216], spd:0.00008, ox:0.14, oy:0.12, phase:0.0 },
+  { x:0.75, y:0.20, r:0.70, color:[0,206,209], spd:0.00010, ox:0.18, oy:0.16, phase:1.5 },
+  { x:0.45, y:0.65, r:0.75, color:[0,118,182], spd:0.00007, ox:0.20, oy:0.14, phase:3.0 },
+  { x:0.10, y:0.80, r:0.55, color:[72,202,228], spd:0.00012, ox:0.10, oy:0.18, phase:4.5 },
+  { x:0.90, y:0.60, r:0.60, color:[0,150,168], spd:0.00009, ox:0.16, oy:0.20, phase:2.2 },
+];
+
+const MOUSE_PULL = [0.30, 0.24, 0.34, 0.20, 0.28];
+const MOUSE_LERP = 0.025;
+
+const orbPos = orbs.map(o => ({ x: o.x, y: o.y }));
+
+function lerp(a, b, f) { return a + (b - a) * f; }
+
+function getBgColor() {
+  return document.documentElement.getAttribute('data-theme') === 'light' ? '#f0f4f8' : '#05050a';
+}
+
+function drawFrame() {
+  t += 1;
+
+  mouse.x = lerp(mouse.x, rawMouse.x, 0.08);
+  mouse.y = lerp(mouse.y, rawMouse.y, 0.08);
+
+  ctx.fillStyle = getBgColor();
+  ctx.fillRect(0, 0, W, H);
+
+  orbs.forEach((orb, i) => {
+    const a = t * orb.spd * 1000 + orb.phase;
+
+    const driftX = orb.x + Math.sin(a * 0.9 + i) * orb.ox + Math.sin(a * 0.4 + i * 2.1) * orb.ox * 0.4;
+    const driftY = orb.y + Math.cos(a * 0.7 + i * 1.3) * orb.oy + Math.cos(a * 0.3 + i * 0.8) * orb.oy * 0.4;
+
+    const pull = MOUSE_PULL[i];
+    const targetX = driftX + (mouse.x - 0.5) * pull;
+    const targetY = driftY + (mouse.y - 0.5) * pull;
+
+    orbPos[i].x = lerp(orbPos[i].x, targetX, MOUSE_LERP);
+    orbPos[i].y = lerp(orbPos[i].y, targetY, MOUSE_LERP);
+
+    const cx = orbPos[i].x * W;
+    const cy = orbPos[i].y * H;
+    const r = orb.r * Math.min(W, H);
+
+    const [R, G, B] = orb.color;
+    const opacity = document.documentElement.getAttribute('data-theme') === 'light' ? 0.25 : 0.40;
+    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    grd.addColorStop(0, `rgba(${R},${G},${B},${opacity})`);
+    grd.addColorStop(0.35, `rgba(${R},${G},${B},${opacity * 0.4})`);
+    grd.addColorStop(0.7, `rgba(${R},${G},${B},${opacity * 0.12})`);
+    grd.addColorStop(1, `rgba(${R},${G},${B},0)`);
+
+    ctx.globalCompositeOperation = 'screen';
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  const mx = mouse.x * W, my = mouse.y * H;
+  ctx.globalCompositeOperation = 'screen';
+
+  const glowOpacity = document.documentElement.getAttribute('data-theme') === 'light' ? 0.08 : 0.12;
+  const mg1 = ctx.createRadialGradient(mx, my, 0, mx, my, 140);
+  mg1.addColorStop(0, `rgba(0,180,216,${glowOpacity})`);
+  mg1.addColorStop(1, 'rgba(0,180,216,0)');
+  ctx.fillStyle = mg1;
+  ctx.beginPath(); ctx.arc(mx, my, 140, 0, Math.PI*2); ctx.fill();
+
+  const mg2 = ctx.createRadialGradient(mx, my, 0, mx, my, 420);
+  mg2.addColorStop(0, `rgba(0,206,209,${glowOpacity * 0.6})`);
+  mg2.addColorStop(1, 'rgba(0,206,209,0)');
+  ctx.fillStyle = mg2;
+  ctx.beginPath(); ctx.arc(mx, my, 420, 0, Math.PI*2); ctx.fill();
+
+  ctx.globalCompositeOperation = 'source-over';
+
+  const vgOpacity = document.documentElement.getAttribute('data-theme') === 'light' ? 0.3 : 0.75;
+  const vg = ctx.createRadialGradient(W/2, H/2, H*0.2, W/2, H/2, H*0.95);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(1, `rgba(0,0,0,${vgOpacity})`);
+  ctx.fillStyle = vg;
+  ctx.fillRect(0, 0, W, H);
+
+  requestAnimationFrame(drawFrame);
+}
+drawFrame();
+
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', () => {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+});
+
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileNav = document.getElementById('mobileNav');
+
+if (mobileMenuBtn && mobileNav) {
+  mobileMenuBtn.addEventListener('click', () => {
+    mobileMenuBtn.classList.toggle('active');
+    mobileNav.classList.toggle('active');
+  });
+  
+  mobileNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenuBtn.classList.remove('active');
+      mobileNav.classList.remove('active');
+    });
+  });
+}
+
+const savedTheme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { 
+    if (e.isIntersecting) { 
+      e.target.classList.add('visible'); 
+      io.unobserve(e.target); 
+    }});
+}, { threshold: 0.15 });
+reveals.forEach(el => io.observe(el));
+</script>
+</body>
+</html>

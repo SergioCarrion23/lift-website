@@ -1,0 +1,409 @@
+/* Efectos tipo "experience" (inspirados en sitios como Orano) */
+
+:root {
+  --fx-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --fx-duration: 650ms;
+  --fx-glow: 0 0 0 0 rgba(0, 180, 216, 0.0);
+}
+
+/* Background premium layers (grain + aurora blobs) */
+#scene-3d::before,
+#scene-3d::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+}
+
+/* Aurora / blobs: suave, con micro-parallax (var --nx/--ny desde JS) */
+#scene-3d::before {
+  transform: translate3d(calc(var(--nx, 0) * 10px), calc(var(--ny, 0) * 10px), 0);
+  transition: transform 120ms var(--fx-ease-out);
+  background:
+    radial-gradient(700px 520px at 72% 38%,
+      rgba(0, 180, 216, 0.20) 0%,
+      rgba(0, 180, 216, 0.0) 60%),
+    radial-gradient(620px 520px at 28% 72%,
+      rgba(0, 180, 216, 0.14) 0%,
+      rgba(0, 180, 216, 0.0) 62%),
+    radial-gradient(900px 700px at 55% 15%,
+      rgba(10, 10, 10, 0.10) 0%,
+      rgba(10, 10, 10, 0.0) 55%);
+  filter: blur(18px) saturate(1.05);
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] #scene-3d::before {
+  mix-blend-mode: screen;
+  opacity: 0.75;
+  filter: blur(20px) saturate(1.15);
+}
+
+/* Grain/noise: textura tipo “studio” */
+#scene-3d::after {
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+}
+
+[data-theme="dark"] #scene-3d::after {
+  opacity: 0.11;
+  mix-blend-mode: soft-light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #scene-3d::before { transition: none; transform: none; }
+}
+
+/* Cursor glow (se mueve con JS) */
+.cursor-glow {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 520px;
+  height: 520px;
+  translate: -50% -50%;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.22;
+  filter: blur(40px);
+  background: radial-gradient(circle at center,
+    rgba(0, 180, 216, 0.45) 0%,
+    rgba(0, 180, 216, 0.18) 35%,
+    rgba(0, 180, 216, 0.0) 70%);
+  mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] .cursor-glow {
+  opacity: 0.26;
+  mix-blend-mode: screen;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-glow { display: none; }
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px) scale(0.985);
+  transition: opacity var(--fx-duration) var(--fx-ease-out),
+    transform var(--fx-duration) var(--fx-ease-out),
+    filter var(--fx-duration) var(--fx-ease-out);
+  filter: blur(6px);
+  will-change: opacity, transform, filter;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Kinetic typography (por letras) */
+.kinetic-text {
+  display: inline-block;
+  letter-spacing: 0.02em;
+}
+
+.kinetic-text .char {
+  display: inline-block;
+  transform: translateY(22px);
+  opacity: 0;
+  filter: blur(10px);
+  transition: transform 700ms var(--fx-ease-out),
+    opacity 700ms var(--fx-ease-out),
+    filter 700ms var(--fx-ease-out);
+  transition-delay: var(--d, 0ms);
+  will-change: transform, opacity, filter;
+}
+
+.kinetic-text.is-visible .char {
+  transform: translateY(0);
+  opacity: 1;
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kinetic-text .char,
+  .kinetic-text.is-visible .char {
+    transform: none;
+    opacity: 1;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Magnetic hover (aplica a elementos seleccionados) */
+.magnetic {
+  transform: translate3d(0, 0, 0);
+  transition: transform 180ms var(--fx-ease-out);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magnetic { transition: none; }
+}
+
+/* Parallax helper */
+.parallax {
+  transform: translate3d(0, var(--py, 0px), 0);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax { transform: none; }
+}
+
+/* ===== PREMIUM EFFECTS (Unicorn Studio inspired) ===== */
+
+/* Animated gradient background */
+.animated-gradient {
+  position: relative;
+  overflow: hidden;
+}
+
+.animated-gradient::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(0, 180, 216, 0.08) 45%,
+    rgba(0, 180, 216, 0.15) 50%,
+    rgba(0, 180, 216, 0.08) 55%,
+    transparent 70%
+  );
+  animation: gradientShift 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes gradientShift {
+  0%, 100% { transform: translateX(-25%) rotate(0deg); }
+  50% { transform: translateX(25%) rotate(5deg); }
+}
+
+/* Glassmorphism cards */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+}
+
+[data-theme="dark"] .glass {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Premium button hover effect */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 600ms ease;
+}
+
+.btn:hover::before {
+  transform: translateX(100%);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 180, 216, 0.25);
+}
+
+/* Premium card hover with shine */
+.card {
+  position: relative;
+  overflow: hidden;
+  transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    transparent 40%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 60%
+  );
+  transform: rotate(45deg) translateY(100%);
+  transition: transform 600ms ease;
+  pointer-events: none;
+}
+
+.card:hover::after {
+  transform: rotate(45deg) translateY(-100%);
+}
+
+.card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--color-accent);
+  box-shadow: 0 20px 40px rgba(0, 180, 216, 0.15);
+}
+
+/* Text gradient effect */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+/* Page transition overlay */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  background: var(--color-accent);
+  z-index: 9999;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  pointer-events: none;
+}
+
+.page-transition.active {
+  animation: pageIn 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageIn {
+  0% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: top; }
+}
+
+/* Hero text glow effect */
+.hero-content h1 {
+  position: relative;
+}
+
+.hero-content h1::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 180, 216, 0.4) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShine 3s ease-in-out infinite;
+  opacity: 0.5;
+}
+
+@keyframes textShine {
+  0%, 100% { background-position: 200% center; }
+  50% { background-position: 0% center; }
+}
+
+/* Interactive underline effect */
+.nav a {
+  position: relative;
+}
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(-50%);
+}
+
+.nav a:hover::after,
+.nav a.active::after {
+  width: 100%;
+}
+
+/* Verse card enhanced flip */
+.verse-card-3d {
+  perspective: 1500px;
+}
+
+.verse-card-3d .verse-card-inner {
+  transition: all 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.verse-card-3d:hover .verse-card-inner {
+  transform: rotateY(180deg) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 180, 216, 0.2);
+}
+
+/* Enhanced reveal animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px) scale(0.97);
+  transition: all 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Floating animation for hero elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.hero-content {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
