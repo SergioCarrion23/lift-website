@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/discord.js": {
+    "discord.js": {
       "runtime": "nodejs18.x"
     }
   }

@@ -746,7 +746,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
   
   if(name && email && message) {
     try {
-      const response = await fetch('/api/discord', {
+      const response = await fetch('/discord', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
