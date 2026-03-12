@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "discord.js": {
-      "runtime": "nodejs18.x"
-    }
-  }
-}
