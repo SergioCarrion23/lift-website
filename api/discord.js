@@ -1,13 +1,26 @@
 const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1481476406037840058/s2BjeP9nNOhMlCYfvNTdJYLK1hM8PoMYPSO0DBezHBRaa9wapfhGoj3VekGnJbHwVyXT';
 
 export default async function handler(req, res) {
+  console.log('Method:', req.method);
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, message, page, timestamp } = req.body;
+  let body = req.body;
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch (e) {
+      return res.status(400).json({ error: 'Invalid JSON' });
+    }
+  }
 
-  const body = {
+  console.log('Body received:', body);
+  
+  const { name, email, message, page, timestamp } = body;
+
+  const discordBody = {
     embeds: [
       {
         title: 'Nuevo formulario Lift',
@@ -18,20 +31,31 @@ export default async function handler(req, res) {
           { name: 'Mensaje', value: message || '-', inline: false },
           { name: 'Página', value: page || '-', inline: false },
         ],
-        footer: { text: timestamp },
+        footer: { text: timestamp || new Date().toISOString() },
       },
     ],
   };
 
-  const response = await fetch(DISCORD_WEBHOOK, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  console.log('Sending to Discord:', discordBody);
 
-  if (response.ok) {
-    return res.status(200).json({ success: true });
-  } else {
-    return res.status(500).json({ error: 'Discord webhook failed' });
+  try {
+    const response = await fetch(DISCORD_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(discordBody),
+    });
+
+    console.log('Discord response:', response.status);
+    
+    if (response.ok) {
+      return res.status(200).json({ success: true });
+    } else {
+      const errorText = await response.text();
+      console.log('Discord error:', errorText);
+      return res.status(500).json({ error: 'Discord webhook failed', details: errorText });
+    }
+  } catch (err) {
+    console.log('Fetch error:', err.message);
+    return res.status(500).json({ error: err.message });
   }
 }
