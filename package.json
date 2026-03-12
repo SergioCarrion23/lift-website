@@ -1,6 +1,9 @@
 {
   "name": "lift-landing",
   "version": "1.0.0",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@vercel/node": "^3.0.0"
   },
