@@ -9,6 +9,6 @@ window.LIFT_CONTACT = {
 
   // URL del webhook de Discord (crear en el canal → Integraciones → Webhooks).
   // Ejemplo: "https://discord.com/api/webhooks/...."
-  discordWebhookUrl: "https://discord.com/api/webhooks/1481476406037840058/s2BjeP9nNOhMlCYfvNTdJYLK1hM8PoMYPSO0DBezHBRaa9wapfhGoj3VekGnJbHwVyXT",
+  discordWebhookUrl: "/api/discord",
 };
 
