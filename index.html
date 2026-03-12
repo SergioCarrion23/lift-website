@@ -90,13 +90,14 @@
       justify-content: space-between;
       padding: 16px 48px;
       z-index: 100;
-      background: rgba(10, 10, 10, 0.8);
+      background: rgba(10, 10, 10, 0.95);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
+      height: 80px;
     }
 
     [data-theme="light"] nav {
-      background: rgba(248, 250, 251, 0.85);
+      background: rgba(248, 250, 251, 0.95);
     }
 
     .nav-center {
@@ -209,7 +210,7 @@
     .mobile-nav {
       display: none;
       position: fixed;
-      top: 70px;
+      top: 80px;
       left: 0;
       right: 0;
       background: var(--bg-secondary);
@@ -323,10 +324,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       text-align: center;
-      padding: 160px 24px 140px;
+      padding: 160px 24px 80px;
       position: relative;
+      overflow: visible;
+      z-index: 1;
     }
 
     .hero-eyebrow {
@@ -342,7 +345,7 @@
       border: 1px solid var(--border);
       padding: 10px 20px;
       border-radius: 100px;
-      margin-bottom: 36px;
+      margin-bottom: 40px;
       animation: fadeUp 1s ease 0.2s both;
     }
 
@@ -350,12 +353,15 @@
 
     .hero-title {
       font-family: 'Fraunces', serif;
-      font-size: clamp(48px, 9vw, 120px);
-      line-height: 1.0;
+      font-size: clamp(48px, 9vw, 110px);
+      line-height: 1.15;
       letter-spacing: -0.03em;
-      margin-bottom: 32px;
+      margin-bottom: 40px;
       padding: 0 16px;
       animation: fadeUp 1s ease 0.4s both;
+      color: var(--text);
+      display: block;
+      width: 100%;
     }
 
     .hero-title em {
