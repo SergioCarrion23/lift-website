@@ -12,7 +12,7 @@ exports.handler = async function(event, context) {
 
   const { name, email, message, page, timestamp } = body;
 
-  const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1481523450630897739/x9v9yCanaJ6v4dCZaqK1sWEl4PmeZAgC3Ik-8WO6wm_daqZ_panaOEGCPWec4bv-E5D6';
+  const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1481476406037840058/s2BjeP9nNOhMlCYfvNTdJYLK1hM8PoMYPSO0DBezHBRaa9wapfhGoj3VekGnJbHwVyXT';
 
   const discordBody = {
     embeds: [
