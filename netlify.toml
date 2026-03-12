@@ -1,0 +1,8 @@
+[[redirects]]
+  from = "/api/discord"
+  to = "/.netlify/functions/discord"
+  status = 200
+
+[build]
+  publish = "/"
+  command = "echo 'No build needed'"
