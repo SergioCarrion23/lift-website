@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Bomba - LIFT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cyan: #00B9D7;
+  --bg: #0A0A0A;
+  --light: #F8FAFB;
+  --glow: 0 0 20px rgba(0, 185, 215, 0.3), 0 0 60px rgba(0, 185, 215, 0.1);
+  --glow-intense: 0 0 30px rgba(0, 185, 215, 0.6), 0 0 80px rgba(0, 185, 215, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+.bg-glow {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,185,215,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 820px;
+  padding: 40px 24px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Logo */
+.logo-wrap {
+  position: relative;
+  margin-bottom: 20px;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s;
+}
+.logo-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  background: radial-gradient(circle, rgba(0,185,215,0.15) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.logo-wrap:hover {
+  transform: scale(1.03);
+  filter: brightness(1.1);
+}
+.logo-wrap:hover::after { opacity: 1; }
+
+.logo {
+  height: 72px;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 12px rgba(0,185,215,0.15));
+}
+
+/* Title */
+.title-group {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.title-group h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: var(--cyan);
+  text-shadow: 0 0 30px rgba(0,185,215,0.3);
+  position: relative;
+  display: inline-block;
+}
+.title-group h1::before {
+  content: '⚠';
+  position: absolute;
+  left: -48px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.6rem;
+  opacity: 0.5;
+  animation: pulse-warn 2s ease-in-out infinite;
+}
+.title-group h1::after {
+  content: '⚠';
+  position: absolute;
+  right: -48px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.6rem;
+  opacity: 0.5;
+  animation: pulse-warn 2s ease-in-out infinite 1s;
+}
+@keyframes pulse-warn {
+  0%, 100% { opacity: 0.3; transform: translateY(-50%) scale(1); }
+  50% { opacity: 0.8; transform: translateY(-50%) scale(1.15); }
+}
+.title-group .sub {
+  font-size: 0.95rem;
+  color: rgba(248,250,251,0.5);
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  margin-top: 6px;
+  font-weight: 300;
+}
+
+/* Timer */
+.timer-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.timer-ring {
+  position: relative;
+  width: 200px; height: 200px;
+  margin-bottom: 8px;
+}
+.timer-ring svg {
+  width: 100%; height: 100%;
+  transform: rotate(-90deg);
+}
+.timer-ring .bg-ring {
+  fill: none;
+  stroke: rgba(248,250,251,0.06);
+  stroke-width: 4;
+}
+.timer-ring .progress-ring {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s, stroke 0.3s;
+  filter: drop-shadow(0 0 6px rgba(0,185,215,0.5));
+}
+.timer-ring .progress-ring.danger { stroke: #ff3355; filter: drop-shadow(0 0 8px rgba(255,51,85,0.6)); }
+.timer-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.timer-number .time {
+  font-family: 'Orbitron', monospace;
+  font-size: 3.2rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--light);
+  line-height: 1;
+}
+.timer-number .time.danger { color: #ff3355; animation: blink 0.6s ease-in-out infinite; }
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+.timer-number .label {
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(248,250,251,0.35);
+  margin-top: 4px;
+}
+
+/* Status */
+.status-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.status-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: 1px solid rgba(0,185,215,0.2);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  background: rgba(0,185,215,0.05);
+  transition: all 0.3s;
+}
+.status-chip .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(0,185,215,0.5);
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+.status-chip .dot.off { background: #ff3355; box-shadow: 0 0 8px rgba(255,51,85,0.5); }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+.status-chip .dot.inactive { background: rgba(248,250,251,0.2); box-shadow: none; animation: none; }
+.status-chip.penalty { border-color: rgba(255,51,85,0.3); background: rgba(255,51,85,0.08); }
+
+/* Riddles */
+.riddles-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.riddle-card {
+  position: relative;
+  padding: 24px 28px;
+  border: 1px solid rgba(0,185,215,0.12);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(0,185,215,0.04) 0%, transparent 100%);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: default;
+  overflow: hidden;
+}
+.riddle-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, rgba(0,185,215,0.06) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.riddle-card:hover {
+  border-color: rgba(0,185,215,0.35);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 12px 40px rgba(0,185,215,0.08);
+}
+.riddle-card:hover::before { opacity: 1; }
+.riddle-card.solved {
+  border-color: rgba(0,185,215,0.4);
+  background: linear-gradient(135deg, rgba(0,185,215,0.08) 0%, transparent 100%);
+}
+.riddle-card .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.riddle-card .num {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 2px;
+  opacity: 0.6;
+}
+.riddle-card .badge {
+  font-size: 0.65rem;
+  padding: 3px 12px;
+  border: 1px solid rgba(248,250,251,0.1);
+  border-radius: 100px;
+  color: rgba(248,250,251,0.4);
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+.riddle-card.solved .badge {
+  border-color: rgba(0,185,215,0.3);
+  color: var(--cyan);
+  background: rgba(0,185,215,0.1);
+}
+.riddle-card .question {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(248,250,251,0.85);
+  margin-bottom: 14px;
+}
+.riddle-card .input-row {
+  display: flex;
+  gap: 10px;
+}
+.riddle-card input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid rgba(248,250,251,0.12);
+  border-radius: 10px;
+  background: rgba(248,250,251,0.04);
+  color: var(--light);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s;
+}
+.riddle-card input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0,185,215,0.1);
+  background: rgba(0,185,215,0.04);
+}
+.riddle-card input:disabled { opacity: 0.3; }
+.riddle-card .btn-check {
+  padding: 10px 20px;
+  border: 1px solid rgba(0,185,215,0.3);
+  border-radius: 10px;
+  background: rgba(0,185,215,0.1);
+  color: var(--cyan);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.riddle-card .btn-check:hover:not(:disabled) {
+  background: var(--cyan);
+  color: var(--bg);
+  box-shadow: var(--glow);
+  transform: scale(1.04);
+}
+.riddle-card .btn-check:disabled { opacity: 0.3; cursor: default; }
+.riddle-card .feedback {
+  font-size: 0.8rem;
+  margin-top: 8px;
+  font-weight: 500;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s, opacity 0.3s;
+  opacity: 0;
+}
+.riddle-card .feedback.show {
+  height: 22px;
+  opacity: 1;
+}
+.riddle-card .feedback.ok { color: var(--cyan); }
+.riddle-card .feedback.err { color: #ff3355; }
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.btn {
+  padding: 14px 40px;
+  border: 1px solid rgba(0,185,215,0.3);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--cyan);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--cyan);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.btn:hover:not(:disabled) {
+  background: var(--cyan);
+  color: var(--bg);
+  box-shadow: var(--glow-intense);
+  transform: translateY(-2px) scale(1.02);
+}
+.btn:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+.btn:disabled { opacity: 0.25; cursor: default; }
+.btn-primary { background: var(--cyan); color: var(--bg); }
+.btn-primary:hover:not(:disabled) { box-shadow: var(--glow-intense); }
+.btn-danger { border-color: rgba(255,51,85,0.3); color: #ff3355; }
+.btn-danger:hover:not(:disabled) { background: #ff3355; color: var(--bg); box-shadow: 0 0 30px rgba(255,51,85,0.3); }
+
+/* Explosion overlay */
+#explosion-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,10,0.6);
+  backdrop-filter: blur(8px);
+  animation: fade-explosion 0.3s ease-out;
+}
+#explosion-overlay.active { display: flex; }
+@keyframes fade-explosion {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+#explosion-overlay video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+#explosion-overlay .overlay-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px;
+}
+#explosion-overlay .overlay-content h2 {
+  font-family: 'Orbitron', monospace;
+  font-size: 4rem;
+  color: #ff3355;
+  text-shadow: 0 0 60px rgba(255,51,85,0.5);
+  letter-spacing: 8px;
+  margin-bottom: 12px;
+}
+#explosion-overlay .overlay-content .penalty-msg {
+  font-size: 1.1rem;
+  color: rgba(248,250,251,0.7);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.penalty-countdown {
+  font-family: 'Orbitron', monospace;
+  font-size: 5rem;
+  font-weight: 900;
+  color: #ff3355;
+  text-shadow: 0 0 40px rgba(255,51,85,0.5);
+  line-height: 1;
+  margin: 12px 0;
+  animation: blink 0.6s ease-in-out infinite;
+}
+
+/* Win overlay */
+#win-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,10,0.7);
+  backdrop-filter: blur(12px);
+}
+#win-overlay.active { display: flex; }
+#win-overlay .win-content {
+  text-align: center;
+  padding: 50px;
+  border: 1px solid rgba(0,185,215,0.2);
+  border-radius: 24px;
+  background: radial-gradient(ellipse at center, rgba(0,185,215,0.08) 0%, transparent 70%);
+  animation: win-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes win-pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+#win-overlay .win-content h2 {
+  font-family: 'Orbitron', monospace;
+  font-size: 3rem;
+  color: var(--cyan);
+  text-shadow: 0 0 40px rgba(0,185,215,0.4);
+  letter-spacing: 6px;
+  margin-bottom: 10px;
+}
+#win-overlay .win-content p { color: rgba(248,250,251,0.6); margin-bottom: 28px; letter-spacing: 2px; }
+.win-sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.win-sparks span {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: var(--cyan);
+  border-radius: 50%;
+  animation: spark-fall 2s linear infinite;
+  box-shadow: 0 0 6px rgba(0,185,215,0.8);
+}
+@keyframes spark-fall {
+  0% { transform: translateY(-20px) scale(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(100vh) scale(1); opacity: 0; }
+}
+
+/* Countdown before explosion text */
+.countdown-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 4px;
+  color: rgba(248,250,251,0.25);
+  margin-top: 6px;
+  transition: all 0.3s;
+  min-height: 20px;
+}
+.countdown-text.active { color: rgba(0,185,215,0.6); }
+.countdown-text.danger { color: rgba(255,51,85,0.6); animation: blink 0.6s ease-in-out infinite; }
+
+/* Shake when explosion */
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-8px); }
+  20% { transform: translateX(8px); }
+  30% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  50% { transform: translateX(-4px); }
+  60% { transform: translateX(4px); }
+  70% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container { padding: 24px 16px 40px; }
+  .logo { height: 52px; }
+  .title-group h1 { font-size: 2rem; letter-spacing: 4px; }
+  .title-group h1::before, .title-group h1::after { display: none; }
+  .timer-ring { width: 160px; height: 160px; }
+  .timer-number .time { font-size: 2.6rem; }
+  .riddle-card { padding: 18px 20px; }
+  .riddle-card .input-row { flex-direction: column; }
+  .btn { padding: 12px 28px; font-size: 0.8rem; }
+  #explosion-overlay .overlay-content h2 { font-size: 2.5rem; }
+  #win-overlay .win-content h2 { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="container" id="app">
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <img class="logo" src="https://res.cloudinary.com/dklycgquj/image/upload/v1785348258/Logo-LIFT-Transparente_hpysn8.png" alt="LIFT">
+  </div>
+
+  <!-- Title -->
+  <div class="title-group">
+    <h1>LA BOMBA</h1>
+    <div class="sub">Desactiva los acertijos</div>
+  </div>
+
+  <!-- Timer -->
+  <div class="timer-section">
+    <div class="timer-ring">
+      <svg viewBox="0 0 100 100">
+        <circle class="bg-ring" cx="50" cy="50" r="42"/>
+        <circle class="progress-ring" id="progress" cx="50" cy="50" r="42"
+          stroke-dasharray="263.89" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-number">
+        <span class="time" id="timerDisplay">4:00</span>
+        <span class="label">Minutos</span>
+      </div>
+    </div>
+    <div class="countdown-text" id="countdownHint">PREPARADO</div>
+  </div>
+
+  <!-- Status -->
+  <div class="status-bar">
+    <div class="status-chip"><span class="dot" id="statusDot"></span><span id="statusText">INACTIVO</span></div>
+    <div class="status-chip"><span id="solvedCount">0/3</span>&nbsp;ACERTIJOS</div>
+  </div>
+
+  <!-- Riddles -->
+  <div class="riddles-grid" id="riddlesGrid">
+    <div class="riddle-card" data-idx="0">
+      <div class="header">
+        <span class="num">ACERTIJO I</span>
+        <span class="badge">PENDIENTE</span>
+      </div>
+      <div class="question">Tengo agujas pero no coso, tengo números pero no soy matemático, las horas marco con precisión. ¿Qué soy?</div>
+      <div class="input-row">
+        <input type="text" placeholder="Tu respuesta..." disabled>
+        <button class="btn-check" disabled>✓</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+    <div class="riddle-card" data-idx="1">
+      <div class="header">
+        <span class="num">ACERTIJO II</span>
+        <span class="badge">PENDIENTE</span>
+      </div>
+      <div class="question">Mientras más tengo, menos peso. ¿Qué soy?</div>
+      <div class="input-row">
+        <input type="text" placeholder="Tu respuesta..." disabled>
+        <button class="btn-check" disabled>✓</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+    <div class="riddle-card" data-idx="2">
+      <div class="header">
+        <span class="num">ACERTIJO III</span>
+        <span class="badge">PENDIENTE</span>
+      </div>
+      <div class="question">Cruza el río sin mojarse, lleva carga sin quejarse, y aunque siempre va y viene, nunca sale de su base. ¿Qué es?</div>
+      <div class="input-row">
+        <input type="text" placeholder="Tu respuesta..." disabled>
+        <button class="btn-check" disabled>✓</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="btn btn-primary" id="btnStart">💣 Armar Bomba</button>
+    <button class="btn btn-danger" id="btnReset" disabled>Reiniciar</button>
+  </div>
+</div>
+
+<!-- Explosion Overlay -->
+<div id="explosion-overlay">
+  <video id="explosionVideo" muted playsinline>
+    <source src="https://res.cloudinary.com/dklycgquj/video/upload/v1785348329/Explosion_frontal_hiperrealista___202607291201_u1ac7i.mp4" type="video/mp4">
+  </video>
+  <div class="overlay-content">
+    <h2>💥 BOOM</h2>
+    <p class="penalty-msg">La bomba ha explotado.</p>
+    <div class="penalty-countdown" id="penaltyCountdown">60</div>
+    <p class="penalty-msg">segundos para reintentar</p>
+    <button class="btn btn-danger" id="btnAfterExplosion" disabled>Esperando...</button>
+  </div>
+</div>
+
+<!-- Win Overlay -->
+<div id="win-overlay">
+  <div class="win-sparks" id="sparksContainer"></div>
+  <div class="win-content">
+    <h2>✓ DESACTIVADA</h2>
+    <p>Has resuelto todos los acertijos a tiempo.</p>
+    <button class="btn btn-primary" id="btnWinContinue">Continuar</button>
+  </div>
+</div>
+
+<script>
+const ANSWERS = ['reloj', 'agujeros', 'puente'];
+
+// DOM
+const timerDisplay = document.getElementById('timerDisplay');
+const progressRing = document.getElementById('progress');
+const countdownHint = document.getElementById('countdownHint');
+const statusDot = document.getElementById('statusDot');
+const statusText = document.getElementById('statusText');
+const solvedCount = document.getElementById('solvedCount');
+const btnStart = document.getElementById('btnStart');
+const btnReset = document.getElementById('btnReset');
+const explosionOverlay = document.getElementById('explosion-overlay');
+const explosionVideo = document.getElementById('explosionVideo');
+const btnAfterExplosion = document.getElementById('btnAfterExplosion');
+const winOverlay = document.getElementById('win-overlay');
+const btnWinContinue = document.getElementById('btnWinContinue');
+const riddlesGrid = document.getElementById('riddlesGrid');
+const penaltyCountdown = document.getElementById('penaltyCountdown');
+
+const cards = riddlesGrid.querySelectorAll('.riddle-card');
+const circumference = 2 * Math.PI * 42;
+
+// State
+let state = 'idle'; // idle | running | exploded | won | penalty
+let timeLeft = 240;
+let maxTime = 240;
+let solved = [false, false, false];
+let timerInterval = null;
+let penaltyInterval = null;
+let explosionTimeout = null;
+
+function setStatus(text, mode) {
+  statusText.textContent = text;
+  statusDot.className = 'dot';
+  if (mode === 'active') { statusDot.classList.add('on'); }
+  else if (mode === 'danger') { statusDot.classList.add('off'); }
+  else { statusDot.classList.add('inactive'); }
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(timeLeft / 60);
+  const secs = timeLeft % 60;
+  timerDisplay.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  const progress = timeLeft / maxTime;
+  progressRing.setAttribute('stroke-dashoffset', circumference * (1 - progress));
+  if (timeLeft <= 10 && state === 'running') {
+    timerDisplay.classList.add('danger');
+    progressRing.classList.add('danger');
+    countdownHint.textContent = '⚠ INMINENTE';
+    countdownHint.className = 'countdown-text danger';
+  } else {
+    timerDisplay.classList.remove('danger');
+    progressRing.classList.remove('danger');
+  }
+}
+
+function updateSolvedBadges() {
+  const count = solved.filter(Boolean).length;
+  solvedCount.textContent = `${count}/3`;
+  cards.forEach((card, i) => {
+    const badge = card.querySelector('.badge');
+    const input = card.querySelector('input');
+    const btn = card.querySelector('.btn-check');
+    if (solved[i]) {
+      card.classList.add('solved');
+      badge.textContent = '✓ RESUELTO';
+      input.disabled = true;
+      btn.disabled = true;
+    } else if (state === 'running') {
+      card.classList.remove('solved');
+      badge.textContent = 'PENDIENTE';
+      input.disabled = false;
+      btn.disabled = false;
+    } else {
+      card.classList.remove('solved');
+      badge.textContent = 'PENDIENTE';
+      input.disabled = true;
+      btn.disabled = true;
+    }
+  });
+}
+
+function enableRiddles(enabled) {
+  cards.forEach((card, i) => {
+    const input = card.querySelector('input');
+    const btn = card.querySelector('.btn-check');
+    if (solved[i]) return;
+    input.disabled = !enabled;
+    btn.disabled = !enabled;
+  });
+}
+
+function resetRiddles() {
+  solved = [false, false, false];
+  cards.forEach((card) => {
+    card.classList.remove('solved');
+    card.querySelector('input').value = '';
+    card.querySelector('.badge').textContent = 'PENDIENTE';
+    const fb = card.querySelector('.feedback');
+    fb.textContent = '';
+    fb.classList.remove('show', 'ok', 'err');
+  });
+  updateSolvedBadges();
+  enableRiddles(false);
+}
+
+function allSolved() { return solved.every(Boolean); }
+
+function handleWin() {
+  if (state !== 'running') return;
+  state = 'won';
+  clearInterval(timerInterval);
+  enableRiddles(false);
+  btnStart.disabled = true;
+  btnReset.disabled = false;
+  setStatus('DESACTIVADA', 'active');
+  countdownHint.textContent = '✓ DESACTIVADA';
+  countdownHint.className = 'countdown-text';
+  winOverlay.classList.add('active');
+  createSparks();
+}
+
+function handleExplosion() {
+  if (state !== 'running') return;
+  state = 'exploded';
+  clearInterval(timerInterval);
+  enableRiddles(false);
+  btnStart.disabled = true;
+  btnReset.disabled = false;
+
+  const container = document.getElementById('app');
+  container.classList.add('shake');
+  setTimeout(() => container.classList.remove('shake'), 500);
+
+  explosionOverlay.classList.add('active');
+  explosionVideo.currentTime = 0;
+  explosionVideo.play().catch(() => {});
+
+  startPenalty();
+}
+
+function startPenalty() {
+  state = 'penalty';
+  let secs = 60;
+  setStatus(`PENALIZACIÓN ${secs}s`, 'danger');
+  countdownHint.textContent = '⏳ ESPERA 1 MINUTO';
+  countdownHint.className = 'countdown-text danger';
+  btnAfterExplosion.textContent = `Esperando ${secs}s...`;
+  btnAfterExplosion.disabled = true;
+  penaltyCountdown.textContent = secs;
+
+  clearInterval(penaltyInterval);
+  penaltyInterval = setInterval(() => {
+    secs--;
+    penaltyCountdown.textContent = secs;
+    btnAfterExplosion.textContent = `Esperando ${secs}s...`;
+    setStatus(`PENALIZACIÓN ${secs}s`, 'danger');
+    if (secs <= 0) {
+      clearInterval(penaltyInterval);
+      explosionOverlay.classList.remove('active');
+      explosionVideo.pause();
+      explosionVideo.currentTime = 0;
+      state = 'idle';
+      setStatus('INACTIVO', 'idle');
+      countdownHint.textContent = 'PREPARADO';
+      countdownHint.className = 'countdown-text';
+      btnStart.disabled = false;
+      btnReset.disabled = true;
+      timeLeft = maxTime;
+      updateTimerDisplay();
+      resetRiddles();
+    }
+  }, 1000);
+}
+
+btnStart.addEventListener('click', () => {
+  if (state === 'running') return;
+  if (state === 'penalty') return;
+  state = 'running';
+  timeLeft = maxTime;
+  resetRiddles();
+  updateTimerDisplay();
+  enableRiddles(true);
+  btnStart.disabled = true;
+  btnReset.disabled = false;
+  setStatus('ARMADA', 'active');
+  countdownHint.textContent = '⚡ EN CURSO';
+  countdownHint.className = 'countdown-text active';
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      handleExplosion();
+    }
+  }, 1000);
+});
+
+btnReset.addEventListener('click', () => {
+  clearInterval(timerInterval);
+  clearInterval(penaltyInterval);
+  explosionOverlay.classList.remove('active');
+  explosionVideo.pause();
+  explosionVideo.currentTime = 0;
+  winOverlay.classList.remove('active');
+  state = 'idle';
+  timeLeft = maxTime;
+  updateTimerDisplay();
+  resetRiddles();
+  enableRiddles(false);
+  btnStart.disabled = false;
+  btnReset.disabled = true;
+  setStatus('INACTIVO', 'idle');
+  countdownHint.textContent = 'PREPARADO';
+  countdownHint.className = 'countdown-text';
+});
+
+btnWinContinue.addEventListener('click', () => {
+  winOverlay.classList.remove('active');
+  state = 'idle';
+  timeLeft = maxTime;
+  updateTimerDisplay();
+  resetRiddles();
+  enableRiddles(false);
+  btnStart.disabled = false;
+  btnReset.disabled = true;
+  setStatus('INACTIVO', 'idle');
+  countdownHint.textContent = 'PREPARADO';
+  countdownHint.className = 'countdown-text';
+});
+
+// Check answers
+cards.forEach((card, idx) => {
+  const input = card.querySelector('input');
+  const btn = card.querySelector('.btn-check');
+  const feedback = card.querySelector('.feedback');
+
+  function checkAnswer() {
+    if (solved[idx] || state !== 'running') return;
+    const answer = input.value.trim().toLowerCase();
+    if (!answer) {
+      feedback.textContent = 'Escribe una respuesta.';
+      feedback.className = 'feedback show err';
+      return;
+    }
+    if (ANSWERS[idx] === answer) {
+      solved[idx] = true;
+      feedback.textContent = '✓ Correcto.';
+      feedback.className = 'feedback show ok';
+      updateSolvedBadges();
+      if (allSolved()) { handleWin(); }
+    } else {
+      feedback.textContent = '✗ Incorrecto, intenta de nuevo.';
+      feedback.className = 'feedback show err';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', checkAnswer);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkAnswer();
+  });
+});
+
+function createSparks() {
+  const container = document.getElementById('sparksContainer');
+  container.innerHTML = '';
+  for (let i = 0; i < 40; i++) {
+    const span = document.createElement('span');
+    span.style.left = Math.random() * 100 + '%';
+    span.style.animationDelay = Math.random() * 3 + 's';
+    span.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    container.appendChild(span);
+  }
+}
+
+// Init
+updateTimerDisplay();
+resetRiddles();
+enableRiddles(false);
+setStatus('INACTIVO', 'idle');
+</script>
+</body>
+</html>
