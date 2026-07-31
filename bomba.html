@@ -338,6 +338,48 @@ body {
   transform: scale(1.04);
 }
 .riddle-card .btn-check:disabled { opacity: 0.3; cursor: default; }
+.riddle-card .hint-row {
+  margin-top: 10px;
+}
+.riddle-card .btn-hint {
+  padding: 8px 18px;
+  border: 1px dashed rgba(212,175,55,0.3);
+  border-radius: 10px;
+  background: rgba(212,175,55,0.05);
+  color: #D4AF37;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.riddle-card .btn-hint:hover:not(:disabled) {
+  background: #D4AF37;
+  color: var(--bg);
+  box-shadow: 0 0 20px rgba(212,175,55,0.3);
+  transform: scale(1.03);
+}
+.riddle-card .btn-hint:disabled { opacity: 0.25; cursor: default; }
+.riddle-card .hint-text {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-left: 2px solid #D4AF37;
+  background: rgba(212,175,55,0.06);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.8rem;
+  color: #D4AF37;
+  letter-spacing: 0.5px;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: height 0.4s, opacity 0.4s, margin 0.4s;
+}
+.riddle-card .hint-text.show {
+  height: 58px;
+  opacity: 1;
+  margin-top: 8px;
+}
 .riddle-card .feedback {
   font-size: 0.8rem;
   margin-top: 8px;
@@ -587,6 +629,7 @@ body {
   <div class="status-bar">
     <div class="status-chip"><span class="dot" id="statusDot"></span><span id="statusText">INACTIVO</span></div>
     <div class="status-chip"><span id="solvedCount">0/3</span>&nbsp;ACERTIJOS</div>
+    <div class="status-chip" id="hintsChip"><span>💡</span>&nbsp;<span id="hintsCount">2 PISTAS</span></div>
   </div>
 
   <!-- Riddles -->
@@ -601,6 +644,10 @@ body {
         <input type="text" placeholder="Tu respuesta..." disabled>
         <button class="btn-check" disabled>✓</button>
       </div>
+      <div class="hint-row">
+        <button class="btn-hint" disabled>💡 Pista (-1 min)</button>
+      </div>
+      <div class="hint-text"></div>
       <div class="feedback"></div>
     </div>
     <div class="riddle-card" data-idx="1">
@@ -613,6 +660,10 @@ body {
         <input type="text" placeholder="Tu respuesta..." disabled>
         <button class="btn-check" disabled>✓</button>
       </div>
+      <div class="hint-row">
+        <button class="btn-hint" disabled>💡 Pista (-1 min)</button>
+      </div>
+      <div class="hint-text"></div>
       <div class="feedback"></div>
     </div>
     <div class="riddle-card" data-idx="2">
@@ -625,6 +676,10 @@ body {
         <input type="text" placeholder="Tu respuesta..." disabled>
         <button class="btn-check" disabled>✓</button>
       </div>
+      <div class="hint-row">
+        <button class="btn-hint" disabled>💡 Pista (-1 min)</button>
+      </div>
+      <div class="hint-text"></div>
       <div class="feedback"></div>
     </div>
   </div>
@@ -679,15 +734,24 @@ const winOverlay = document.getElementById('win-overlay');
 const btnWinContinue = document.getElementById('btnWinContinue');
 const riddlesGrid = document.getElementById('riddlesGrid');
 const penaltyCountdown = document.getElementById('penaltyCountdown');
+const hintsCount = document.getElementById('hintsCount');
+const hintsChip = document.getElementById('hintsChip');
 
 const cards = riddlesGrid.querySelectorAll('.riddle-card');
 const circumference = 2 * Math.PI * 42;
+const HINTS = [
+  'Mis agujas marcan las horas.',
+  'Se hacen en el queso o en la pared.',
+  'Permite cruzar de una orilla a otra.'
+];
 
 // State
 let state = 'idle'; // idle | running | exploded | won | penalty
 let timeLeft = 240;
 let maxTime = 240;
 let solved = [false, false, false];
+let hintsUsed = [false, false, false];
+let hintsLeft = 2;
 let timerInterval = null;
 let penaltyInterval = null;
 let explosionTimeout = null;
@@ -724,21 +788,25 @@ function updateSolvedBadges() {
     const badge = card.querySelector('.badge');
     const input = card.querySelector('input');
     const btn = card.querySelector('.btn-check');
+    const hintBtn = card.querySelector('.btn-hint');
     if (solved[i]) {
       card.classList.add('solved');
       badge.textContent = '✓ RESUELTO';
       input.disabled = true;
       btn.disabled = true;
+      hintBtn.disabled = true;
     } else if (state === 'running') {
       card.classList.remove('solved');
       badge.textContent = 'PENDIENTE';
       input.disabled = false;
       btn.disabled = false;
+      hintBtn.disabled = hintsUsed[i] || hintsLeft <= 0;
     } else {
       card.classList.remove('solved');
       badge.textContent = 'PENDIENTE';
       input.disabled = true;
       btn.disabled = true;
+      hintBtn.disabled = true;
     }
   });
 }
@@ -747,14 +815,59 @@ function enableRiddles(enabled) {
   cards.forEach((card, i) => {
     const input = card.querySelector('input');
     const btn = card.querySelector('.btn-check');
-    if (solved[i]) return;
+    const hintBtn = card.querySelector('.btn-hint');
+    if (solved[i]) {
+      hintBtn.disabled = true;
+      return;
+    }
     input.disabled = !enabled;
     btn.disabled = !enabled;
+    hintBtn.disabled = !enabled || hintsUsed[i] || hintsLeft <= 0;
   });
+}
+
+function updateHintsChip() {
+  hintsCount.textContent = `${hintsLeft} PISTAS`;
+  hintsChip.style.opacity = hintsLeft === 0 ? '0.4' : '1';
+}
+
+function updateHintButtons() {
+  cards.forEach((card, i) => {
+    const hintBtn = card.querySelector('.btn-hint');
+    if (solved[i] || state !== 'running' || hintsUsed[i] || hintsLeft <= 0) {
+      hintBtn.disabled = true;
+    } else {
+      hintBtn.disabled = false;
+    }
+  });
+}
+
+function useHint(idx) {
+  if (state !== 'running' || solved[idx] || hintsUsed[idx] || hintsLeft <= 0) return;
+  hintsUsed[idx] = true;
+  hintsLeft--;
+  updateHintsChip();
+
+  const card = cards[idx];
+  const hintText = card.querySelector('.hint-text');
+  hintText.textContent = `💡 ${HINTS[idx]}`;
+  hintText.classList.add('show');
+
+  timeLeft = Math.max(0, timeLeft - 60);
+  updateTimerDisplay();
+  updateHintButtons();
+
+  if (timeLeft <= 0) {
+    clearInterval(timerInterval);
+    handleExplosion();
+  }
 }
 
 function resetRiddles() {
   solved = [false, false, false];
+  hintsUsed = [false, false, false];
+  hintsLeft = 2;
+  updateHintsChip();
   cards.forEach((card) => {
     card.classList.remove('solved');
     card.querySelector('input').value = '';
@@ -762,8 +875,12 @@ function resetRiddles() {
     const fb = card.querySelector('.feedback');
     fb.textContent = '';
     fb.classList.remove('show', 'ok', 'err');
+    const ht = card.querySelector('.hint-text');
+    ht.textContent = '';
+    ht.classList.remove('show');
   });
   updateSolvedBadges();
+  updateHintButtons();
   enableRiddles(false);
 }
 
@@ -926,6 +1043,9 @@ cards.forEach((card, idx) => {
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') checkAnswer();
   });
+
+  const hintBtn = card.querySelector('.btn-hint');
+  hintBtn.addEventListener('click', () => useHint(idx));
 });
 
 function createSparks() {
@@ -948,3 +1068,4 @@ setStatus('INACTIVO', 'idle');
 </script>
 </body>
 </html>
+
