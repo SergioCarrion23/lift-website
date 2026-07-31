@@ -270,6 +270,48 @@ body {
   transform: scale(1.04);
 }
 .riddle-card .btn-check:disabled { opacity: 0.3; cursor: default; }
+.riddle-card .hint-row {
+  margin-top: 10px;
+}
+.riddle-card .btn-hint {
+  padding: 8px 18px;
+  border: 1px dashed rgba(212,175,55,0.3);
+  border-radius: 10px;
+  background: rgba(212,175,55,0.05);
+  color: var(--gold);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.riddle-card .btn-hint:hover:not(:disabled) {
+  background: var(--gold);
+  color: var(--bg);
+  box-shadow: 0 0 20px rgba(212,175,55,0.3);
+  transform: scale(1.03);
+}
+.riddle-card .btn-hint:disabled { opacity: 0.25; cursor: default; }
+.riddle-card .hint-text {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-left: 2px solid var(--gold);
+  background: rgba(212,175,55,0.06);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.8rem;
+  color: var(--gold);
+  letter-spacing: 0.5px;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: height 0.4s, opacity 0.4s, margin 0.4s;
+}
+.riddle-card .hint-text.show {
+  height: 58px;
+  opacity: 1;
+  margin-top: 8px;
+}
 .riddle-card .feedback {
   font-size: 0.8rem;
   margin-top: 8px;
@@ -313,6 +355,56 @@ body {
   color: rgba(248,250,251,0.3);
 }
 .progress-label span:last-child { color: var(--cyan); }
+.hints-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+.hints-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border: 1px solid rgba(212,175,55,0.25);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--gold);
+  background: rgba(212,175,55,0.05);
+  transition: opacity 0.3s;
+}
+.lock-banner {
+  width: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255,51,85,0.25);
+  border-radius: 12px;
+  background: rgba(255,51,85,0.07);
+  font-size: 0.85rem;
+  color: rgba(248,250,251,0.7);
+  letter-spacing: 1px;
+  animation: lock-pulse 1.5s ease-in-out infinite;
+}
+.lock-banner.active { display: flex; }
+.lock-banner .lock-timer {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  color: #ff3355;
+  font-size: 1rem;
+}
+@keyframes lock-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(255,51,85,0); }
+  50% { box-shadow: 0 0 20px rgba(255,51,85,0.15); }
+}
+.riddle-card.locked-card {
+  border-color: rgba(255,51,85,0.2);
+  opacity: 0.7;
+}
 
 /* Video unlock */
 .video-section {
@@ -538,6 +630,10 @@ body {
         <input type="text" placeholder="Tu respuesta...">
         <button class="btn-check">✓</button>
       </div>
+      <div class="hint-row">
+        <button class="btn-hint">💡 Pista (bloquea 55s)</button>
+      </div>
+      <div class="hint-text"></div>
       <div class="feedback"></div>
     </div>
     <div class="riddle-card" data-idx="1">
@@ -550,6 +646,10 @@ body {
         <input type="text" placeholder="Tu respuesta...">
         <button class="btn-check">✓</button>
       </div>
+      <div class="hint-row">
+        <button class="btn-hint">💡 Pista (bloquea 55s)</button>
+      </div>
+      <div class="hint-text"></div>
       <div class="feedback"></div>
     </div>
     <div class="riddle-card" data-idx="2">
@@ -562,6 +662,10 @@ body {
         <input type="text" placeholder="Tu respuesta...">
         <button class="btn-check">✓</button>
       </div>
+      <div class="hint-row">
+        <button class="btn-hint">💡 Pista (bloquea 55s)</button>
+      </div>
+      <div class="hint-text"></div>
       <div class="feedback"></div>
     </div>
   </div>
@@ -575,13 +679,22 @@ body {
       <span>Sabiduría</span>
       <span id="progressText">0 / 3</span>
     </div>
+    <div class="hints-row">
+      <span class="hints-chip" id="hintsChip">💡 <span id="hintsCount">2 PISTAS</span></span>
+    </div>
+  </div>
+
+  <!-- Lock banner -->
+  <div class="lock-banner" id="lockBanner">
+    <span>🔒 Campos bloqueados — podrán responder en</span>
+    <span class="lock-timer" id="lockTimer">55s</span>
   </div>
 
   <!-- Video -->
   <div class="video-section">
     <div class="video-container locked" id="videoContainer">
-      <video id="unlockVideo" muted playsinline controls>
-        <source src="https://res.cloudinary.com/dklycgquj/video/upload/v1785348329/Explosion_frontal_hiperrealista___202607291201_u1ac7i.mp4" type="video/mp4">
+      <video id="unlockVideo" playsinline controls>
+        <source src="https://res.cloudinary.com/dklycgquj/video/upload/v1785509127/VID_20260730_185445_ztthzj.mp4" type="video/mp4">
       </video>
       <div class="video-lock" id="videoLock">
         <span class="lock-icon">🔒</span>
@@ -620,8 +733,22 @@ const unlockVideo = document.getElementById('unlockVideo');
 const successOverlay = document.getElementById('success-overlay');
 const btnCloseOverlay = document.getElementById('btnCloseOverlay');
 const btnReset = document.getElementById('btnReset');
+const hintsChip = document.getElementById('hintsChip');
+const hintsCount = document.getElementById('hintsCount');
+const lockBanner = document.getElementById('lockBanner');
+const lockTimer = document.getElementById('lockTimer');
+
+const HINTS = [
+  'Sirve para arreglar tu cabello.',
+  'Los viajeros lo siguen para llegar a su destino.',
+  'Fluye hacia el mar sin descanso.'
+];
 
 let solved = [false, false, false];
+let hintsUsed = [false, false, false];
+let hintsLeft = 2;
+let lockInterval = null;
+let inputsLocked = false;
 
 // Particles
 (function createParticles() {
@@ -646,18 +773,71 @@ function updateProgress() {
     const badge = card.querySelector('.badge');
     const input = card.querySelector('input');
     const btn = card.querySelector('.btn-check');
+    const hintBtn = card.querySelector('.btn-hint');
     if (solved[i]) {
       card.classList.add('solved');
       badge.textContent = '✓ RESUELTO';
       input.disabled = true;
       btn.disabled = true;
+      hintBtn.disabled = true;
     } else {
       card.classList.remove('solved');
       badge.textContent = 'PENDIENTE';
-      input.disabled = false;
-      btn.disabled = false;
+      input.disabled = inputsLocked;
+      btn.disabled = inputsLocked;
+      hintBtn.disabled = hintsUsed[i] || hintsLeft <= 0;
     }
   });
+}
+
+function updateHintsChip() {
+  hintsCount.textContent = `${hintsLeft} PISTAS`;
+  hintsChip.style.opacity = hintsLeft === 0 ? '0.4' : '1';
+}
+
+function setInputsLocked(locked) {
+  inputsLocked = locked;
+  cards.forEach((card, i) => {
+    const input = card.querySelector('input');
+    const btn = card.querySelector('.btn-check');
+    if (!solved[i]) {
+      input.disabled = locked;
+      btn.disabled = locked;
+      card.classList.toggle('locked-card', locked);
+    }
+  });
+}
+
+function lockInputs(seconds) {
+  clearInterval(lockInterval);
+  setInputsLocked(true);
+  lockBanner.classList.add('active');
+  lockTimer.textContent = `${seconds}s`;
+  let remaining = seconds;
+  lockInterval = setInterval(() => {
+    remaining--;
+    lockTimer.textContent = `${remaining}s`;
+    if (remaining <= 0) {
+      clearInterval(lockInterval);
+      setInputsLocked(false);
+      lockBanner.classList.remove('active');
+    }
+  }, 1000);
+}
+
+function useHint(idx) {
+  if (solved[idx] || hintsUsed[idx] || hintsLeft <= 0) return;
+  hintsUsed[idx] = true;
+  hintsLeft--;
+  updateHintsChip();
+
+  const card = cards[idx];
+  const hintText = card.querySelector('.hint-text');
+  hintText.textContent = `💡 ${HINTS[idx]}`;
+  hintText.classList.add('show');
+
+  lockInputs(55);
+  updateProgress();
 }
 
 function checkAllSolved() {
@@ -713,6 +893,9 @@ cards.forEach((card, idx) => {
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') checkAnswer();
   });
+
+  const hintBtn = card.querySelector('.btn-hint');
+  hintBtn.addEventListener('click', () => useHint(idx));
 });
 
 // Close overlay
@@ -724,13 +907,23 @@ btnCloseOverlay.addEventListener('click', () => {
 // Reset
 btnReset.addEventListener('click', () => {
   solved = [false, false, false];
+  hintsUsed = [false, false, false];
+  hintsLeft = 2;
+  clearInterval(lockInterval);
+  inputsLocked = false;
+  lockBanner.classList.remove('active');
+  updateHintsChip();
   cards.forEach((card) => {
     card.classList.remove('solved');
+    card.classList.remove('locked-card');
     card.querySelector('input').value = '';
     card.querySelector('.badge').textContent = 'OCULTO';
     const fb = card.querySelector('.feedback');
     fb.textContent = '';
     fb.classList.remove('show', 'ok', 'err', 'king');
+    const ht = card.querySelector('.hint-text');
+    ht.textContent = '';
+    ht.classList.remove('show');
   });
   videoContainer.classList.add('locked');
   videoContainer.classList.remove('unlocked');
@@ -742,6 +935,7 @@ btnReset.addEventListener('click', () => {
 });
 
 // Init
+updateHintsChip();
 updateProgress();
 </script>
 </body>
